@@ -40,12 +40,3 @@ O projeto não requer instalação de pacotes, servidores ou processos de build 
 2. Acesse a pasta do projeto.
 
 3. Abra o arquivo index.html em qualquer navegador web moderno (Chrome, Firefox, Edge, Opera).
-
-## ⚙️ Como Customizar (Para Mestres de RPG)
-Se você é um desenvolvedor ou Mestre de Jogo querendo adaptar esta Wiki para a sua própria campanha, você pode facilmente editar:
-
-As Cores Globais: Altere as variáveis :root no topo do arquivo CSS. Ex: Mude --crimson para outra cor caso seu protagonista tenha outra aura mágica.
-
-A Lore: O texto da história pode ser diretamente alterado nas tags <p> e <div> dentro das estruturas <section id="sec-... ">.
-
-Os Stats dos Personagens: Edite os atributos do estilo style="width: 92%" nas barras <div class="stat-fill"> na seção de Personagens.
