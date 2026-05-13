@@ -1,1816 +1,2013 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>O Grimório do Deserto — Wiki</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&family=Cinzel+Decorative:wght@400;700&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --void: #06060a;
-      --obsidian: #0d0d14;
-      --deep: #12121c;
-      --surface: #1a1a28;
-      --panel: #1f1f30;
-      --border: #2a2a3e;
-      --crimson: #c41e3a;
-      --crimson-bright: #ff2042;
-      --crimson-glow: rgba(196, 30, 58, 0.35);
-      --crimson-dim: #6b0f1f;
-      --gold: #d4a017;
-      --gold-bright: #f5c842;
-      --gold-glow: rgba(212, 160, 23, 0.3);
-      --white-pure: #f0ece4;
-      --white-dim: #b8b4aa;
-      --text-primary: #e8e0d0;
-      --text-muted: #7a7568;
-      --pixel: 'Press Start 2P', monospace;
-      --vt: 'VT323', monospace;
-      --cinzel: 'Cinzel Decorative', serif;
-      --nav-w: 260px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Grimório do Deserto — Wiki</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #06060a;
+    --obsidian: #0d0d14;
+    --deep: #12121c;
+    --surface: #1a1a28;
+    --panel: #1f1f30;
+    --border: #2a2a3e;
+    --crimson: #c41e3a;
+    --crimson-bright: #ff2042;
+    --crimson-glow: rgba(196,30,58,0.35);
+    --crimson-dim: #6b0f1f;
+    --gold: #d4a017;
+    --gold-bright: #f5c842;
+    --gold-glow: rgba(212,160,23,0.3);
+    --white-pure: #f0ece4;
+    --white-dim: #b8b4aa;
+    --text-primary: #e8e0d0;
+    --text-muted: #7a7568;
+    --pixel: 'Press Start 2P', monospace;
+    --vt: 'VT323', monospace;
+    --cinzel: 'Cinzel Decorative', serif;
+    --nav-w: 260px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    /* offset for fixed topbar (mobile) — harmless on desktop */
+    scroll-padding-top: 70px;
+  }
+
+  /* ── ANCHOR HIGHLIGHT ── */
+  @keyframes anchor-flash-crimson {
+    0%   { text-shadow: 0 0 0px var(--crimson); color: inherit; }
+    15%  { text-shadow: 0 0 18px var(--crimson), 0 0 6px var(--crimson-bright); color: var(--crimson-bright); }
+    60%  { text-shadow: 0 0 10px var(--crimson-glow); color: var(--crimson-bright); }
+    100% { text-shadow: none; color: inherit; }
+  }
+
+  @keyframes anchor-flash-gold {
+    0%   { text-shadow: 0 0 0px var(--gold); color: inherit; }
+    15%  { text-shadow: 0 0 18px var(--gold), 0 0 6px var(--gold-bright); color: var(--gold-bright); }
+    60%  { text-shadow: 0 0 10px var(--gold-glow); color: var(--gold-bright); }
+    100% { text-shadow: none; color: inherit; }
+  }
+
+  .anchor-highlight          { animation: anchor-flash-crimson 1.2s ease forwards; }
+  .anchor-highlight.gold-sub { animation: anchor-flash-gold    1.2s ease forwards; }
+
+  /* ── TABLE OVERFLOW WRAPPER ── */
+  /* Applied via JS to all tables inside .section */
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+  }
+
+  .table-scroll::-webkit-scrollbar { height: 4px; }
+  .table-scroll::-webkit-scrollbar-track { background: var(--obsidian); }
+  .table-scroll::-webkit-scrollbar-thumb { background: var(--crimson-dim); }
+
+  body {
+    background: var(--void);
+    color: var(--text-primary);
+    font-family: var(--vt);
+    font-size: 20px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SCANLINE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--nav-w);
+    height: 100vh;
+    background: var(--obsidian);
+    border-right: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .sidebar-logo .logo-title {
+    font-family: var(--pixel);
+    font-size: 8px;
+    color: var(--crimson-bright);
+    line-height: 1.8;
+    text-shadow: 0 0 12px var(--crimson);
+    letter-spacing: 1px;
+  }
+
+  .sidebar-logo .logo-sub {
+    font-family: var(--vt);
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* grimoire float */
+  .grimoire-wrap {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .grimoire {
+    width: 80px;
+    height: 100px;
+    position: relative;
+    animation: grimoire-float 3.5s ease-in-out infinite;
+    image-rendering: pixelated;
+  }
+
+  .grimoire-body {
+    width: 80px;
+    height: 100px;
+    background: #0e0e0e;
+    border: 3px solid #1a1a1a;
+    position: relative;
+    image-rendering: pixelated;
+    box-shadow:
+      inset -4px 0 0 #050505,
+      inset 4px 0 0 #1f1f1f,
+      0 0 20px var(--crimson-glow),
+      0 0 40px rgba(196,30,58,0.12);
+  }
+
+  .grimoire-spine {
+    position: absolute;
+    left: 0; top: 0;
+    width: 12px; height: 100%;
+    background: #1a0a0a;
+    border-right: 2px solid #2a1010;
+  }
+
+  .grimoire-clover {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px; height: 32px;
+  }
+
+  .grimoire-clover .petal {
+    position: absolute;
+    width: 12px; height: 12px;
+    background: var(--crimson);
+    border-radius: 50% 50% 0 50%;
+    box-shadow: 0 0 8px var(--crimson-glow);
+    animation: pulse-petal 2s ease-in-out infinite;
+  }
+
+  .grimoire-clover .petal:nth-child(1) { top: 0; left: 10px; transform: rotate(0deg); animation-delay: 0s; }
+  .grimoire-clover .petal:nth-child(2) { top: 10px; right: 0; transform: rotate(90deg); animation-delay: 0.5s; }
+  .grimoire-clover .petal:nth-child(3) { bottom: 0; left: 10px; transform: rotate(180deg); animation-delay: 1s; }
+  .grimoire-clover .petal:nth-child(4) { top: 10px; left: 0; transform: rotate(270deg); animation-delay: 1.5s; }
+  .grimoire-clover .stem {
+    position: absolute;
+    bottom: -6px; left: 14px;
+    width: 4px; height: 10px;
+    background: var(--crimson-dim);
+  }
+
+  .grimoire-glitch {
+    position: absolute;
+    inset: 0;
+    animation: glitch-book 5s steps(1) infinite;
+    pointer-events: none;
+  }
+
+  @keyframes grimoire-float {
+    0%, 100% { transform: translateY(0px) rotate(-1deg); filter: drop-shadow(0 8px 20px var(--crimson-glow)); }
+    50% { transform: translateY(-10px) rotate(1deg); filter: drop-shadow(0 18px 30px rgba(196,30,58,0.5)); }
+  }
+
+  @keyframes pulse-petal {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--crimson-glow); }
+    50% { opacity: 0.6; box-shadow: 0 0 16px var(--crimson); }
+  }
+
+  @keyframes glitch-book {
+    0%, 90%, 100% { opacity: 0; clip-path: none; }
+    91% { opacity: 0.4; clip-path: inset(10% 0 80% 0); transform: translateX(-3px); background: rgba(196,30,58,0.15); }
+    93% { opacity: 0.4; clip-path: inset(60% 0 20% 0); transform: translateX(3px); background: rgba(196,30,58,0.1); }
+  }
+
+  /* ── NAV LINKS ── */
+  .nav-links { padding: 8px 0; flex: 1; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-family: var(--pixel);
+    font-size: 7px;
+    color: var(--text-muted);
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    line-height: 1.6;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--crimson-glow);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .nav-item:hover::before { opacity: 1; }
+  .nav-item:hover { color: var(--white-pure); border-left-color: var(--crimson); }
+
+  .nav-item.active {
+    color: var(--crimson-bright);
+    border-left-color: var(--crimson-bright);
+    background: rgba(196,30,58,0.08);
+  }
+
+  .nav-item.active::before { opacity: 0.5; }
+
+  .nav-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    width: 18px;
+    text-align: center;
+  }
+
+  .nav-roman {
+    font-family: var(--vt);
+    font-size: 13px;
+    color: var(--crimson-dim);
+    flex-shrink: 0;
+    width: 18px;
+  }
+
+  .nav-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 20px;
+  }
+
+  .sidebar-footer {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    font-family: var(--pixel);
+    font-size: 6px;
+    color: var(--text-muted);
+    line-height: 2;
+    text-align: center;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    margin-left: var(--nav-w);
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* ── TOP BAR (mobile) ── */
+  .topbar {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 54px;
+    background: var(--obsidian);
+    border-bottom: 2px solid var(--border);
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    z-index: 200;
+  }
+
+  .hamburger {
+    background: none;
+    border: 2px solid var(--border);
+    color: var(--text-primary);
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: border-color 0.2s;
+  }
+  .hamburger:hover { border-color: var(--crimson); color: var(--crimson-bright); }
+
+  .topbar-title {
+    font-family: var(--pixel);
+    font-size: 7px;
+    color: var(--crimson-bright);
+    text-shadow: 0 0 10px var(--crimson);
+  }
+
+  /* ── OVERLAY ── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 99;
+  }
+  .overlay.show { display: block; }
+
+  /* ── SECTIONS ── */
+  .section {
+    display: none;
+    padding: 60px 56px 80px;
+    max-width: 900px;
+    animation: fade-in 0.4s ease;
+    min-height: 100vh;
+  }
+
+  .section.active { display: block; }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    margin-bottom: 48px;
+    position: relative;
+    padding-bottom: 24px;
+  }
+
+  .section-eyebrow {
+    font-family: var(--pixel);
+    font-size: 7px;
+    color: var(--crimson);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .section-title {
+    font-family: var(--pixel);
+    font-size: 16px;
+    color: var(--white-pure);
+    line-height: 1.6;
+    text-shadow: 0 0 20px var(--crimson-glow), 0 2px 0 var(--void);
+  }
+
+  .section-title.gold {
+    text-shadow: 0 0 20px var(--gold-glow), 0 2px 0 var(--void);
+    color: var(--gold-bright);
+  }
+
+  .section-divider {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-dim) 60%, transparent);
+  }
+
+  .section-divider.gold-line {
+    background: linear-gradient(90deg, var(--gold), var(--gold-glow) 60%, transparent);
+  }
+
+  /* ── PIXEL BOX ── */
+  .pixel-box {
+    border: 2px solid var(--border);
+    background: var(--surface);
+    padding: 28px 32px;
+    position: relative;
+    margin-bottom: 28px;
+    transition: border-color 0.2s;
+  }
+
+  .pixel-box::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: 2px solid transparent;
+    pointer-events: none;
+  }
+
+  .pixel-box:hover { border-color: var(--crimson-dim); }
+
+  .pixel-box.gold-box { border-color: #3a3010; }
+  .pixel-box.gold-box:hover { border-color: var(--gold); }
+
+  .pixel-box-title {
+    font-family: var(--pixel);
+    font-size: 8px;
+    color: var(--crimson-bright);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+
+  .pixel-box-title.gold { color: var(--gold-bright); }
+
+  .pixel-box p {
+    font-family: var(--vt);
+    font-size: 20px;
+    color: var(--text-primary);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+
+  .pixel-box p:last-child { margin-bottom: 0; }
+
+  /* ── PIXEL CORNER decorators ── */
+  .corner::before, .corner::after,
+  .corner > span::before, .corner > span::after {
+    content: '▪';
+    position: absolute;
+    font-size: 8px;
+    color: var(--crimson-dim);
+    line-height: 1;
+  }
+  .corner::before { top: -5px; left: -5px; }
+  .corner::after { top: -5px; right: -5px; }
+  .corner > span::before { bottom: -5px; left: -5px; }
+  .corner > span::after { bottom: -5px; right: -5px; }
+
+  /* ── CHARACTER CARDS ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .char-card {
+    border: 2px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: default;
+  }
+
+  .char-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  }
+
+  /* DANTE */
+  .card-dante {
+    background: linear-gradient(160deg, #0a0008 0%, #0f0f18 60%, #150008 100%);
+    border-color: var(--crimson-dim);
+    box-shadow: 0 0 30px rgba(196,30,58,0.2);
+  }
+
+  .card-dante:hover { box-shadow: 0 16px 50px rgba(196,30,58,0.4); border-color: var(--crimson); }
+
+  /* ELIAS */
+  .card-elias {
+    background: linear-gradient(160deg, #12100a 0%, #1a1710 60%, #12110a 100%);
+    border-color: #3a3010;
+    box-shadow: 0 0 30px rgba(212,160,23,0.15);
+  }
+
+  .card-elias:hover { box-shadow: 0 16px 50px rgba(212,160,23,0.3); border-color: var(--gold); }
+
+  .card-banner {
+    height: 8px;
+  }
+
+  .card-dante .card-banner { background: var(--crimson); }
+  .card-elias .card-banner { background: var(--gold); }
+
+  .card-body { padding: 24px; }
+
+  .card-avatar {
+    width: 64px; height: 64px;
+    border: 2px solid;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--pixel);
+    font-size: 18px;
+    margin-bottom: 16px;
+    position: relative;
+    image-rendering: pixelated;
+  }
+
+  .card-dante .card-avatar {
+    border-color: var(--crimson);
+    background: var(--void);
+    color: var(--crimson-bright);
+    box-shadow: 0 0 16px var(--crimson-glow), inset 0 0 12px rgba(196,30,58,0.1);
+    animation: avatar-pulse 3s ease-in-out infinite;
+  }
+
+  .card-elias .card-avatar {
+    border-color: var(--gold);
+    background: #0e0c06;
+    color: var(--gold-bright);
+    box-shadow: 0 0 16px var(--gold-glow), inset 0 0 12px rgba(212,160,23,0.1);
+  }
+
+  @keyframes avatar-pulse {
+    0%, 100% { box-shadow: 0 0 16px var(--crimson-glow), inset 0 0 12px rgba(196,30,58,0.1); }
+    50% { box-shadow: 0 0 28px rgba(196,30,58,0.6), inset 0 0 20px rgba(196,30,58,0.2); }
+  }
+
+  .card-name {
+    font-family: var(--pixel);
+    font-size: 10px;
+    margin-bottom: 4px;
+    line-height: 1.5;
+  }
+
+  .card-dante .card-name { color: var(--crimson-bright); }
+  .card-elias .card-name { color: var(--gold-bright); }
+
+  .card-epithet {
+    font-family: var(--vt);
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .card-stats { display: flex; flex-direction: column; gap: 8px; }
+
+  .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--pixel);
+    font-size: 6px;
+  }
+
+  .stat-label { color: var(--text-muted); width: 70px; flex-shrink: 0; line-height: 1.8; }
+
+  .stat-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--deep);
+    border: 1px solid var(--border);
+    position: relative;
+    image-rendering: pixelated;
+  }
+
+  .stat-fill {
+    height: 100%;
+    position: relative;
+    animation: bar-reveal 1s ease forwards;
+    transform-origin: left;
+  }
+
+  .card-dante .stat-fill { background: var(--crimson); box-shadow: 2px 0 6px var(--crimson-glow); }
+  .card-elias .stat-fill { background: var(--gold); box-shadow: 2px 0 6px var(--gold-glow); }
+
+  @keyframes bar-reveal {
+    from { width: 0 !important; }
+  }
+
+  .stat-val { color: var(--text-muted); width: 24px; text-align: right; }
+
+  .card-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+
+  .tag {
+    font-family: var(--pixel);
+    font-size: 5.5px;
+    padding: 4px 8px;
+    border: 1px solid;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+  }
+
+  .card-dante .tag { border-color: var(--crimson-dim); color: var(--crimson); background: rgba(196,30,58,0.08); }
+  .card-elias .tag { border-color: #3a3010; color: var(--gold); background: rgba(212,160,23,0.08); }
+
+  /* ── LORE QUOTE ── */
+  .lore-quote {
+    border-left: 3px solid var(--crimson);
+    padding: 16px 24px;
+    background: var(--deep);
+    margin: 24px 0;
+    position: relative;
+    font-family: var(--vt);
+    font-size: 22px;
+    font-style: italic;
+    color: var(--white-dim);
+    line-height: 1.6;
+  }
+
+  .lore-quote.gold-quote { border-left-color: var(--gold); }
+
+  .lore-quote::before {
+    content: '"';
+    position: absolute;
+    top: -8px; left: 16px;
+    font-family: var(--cinzel);
+    font-size: 48px;
+    color: var(--crimson-dim);
+    line-height: 1;
+  }
+
+  .lore-quote.gold-quote::before { color: #3a3010; }
+
+  .lore-quote-attr {
+    display: block;
+    margin-top: 10px;
+    font-size: 15px;
+    font-style: normal;
+    color: var(--text-muted);
+    font-family: var(--pixel);
+    font-size: 6px;
+  }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .info-cell {
+    background: var(--deep);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    transition: border-color 0.2s;
+  }
+
+  .info-cell:hover { border-color: var(--crimson-dim); }
+  .info-cell.gold-cell:hover { border-color: #3a3010; }
+
+  .info-cell-label {
+    font-family: var(--pixel);
+    font-size: 6px;
+    color: var(--crimson);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .info-cell-label.gold { color: var(--gold); }
+
+  .info-cell-value {
+    font-family: var(--vt);
+    font-size: 19px;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  /* ── MECHANICS ── */
+  .mechanic-block {
+    background: var(--deep);
+    border: 2px solid var(--border);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .mechanic-block:hover { border-color: var(--crimson-dim); }
+
+  .mechanic-number {
+    position: absolute;
+    top: -14px; left: 20px;
+    background: var(--crimson);
+    font-family: var(--pixel);
+    font-size: 8px;
+    padding: 4px 10px;
+    color: var(--white-pure);
+    line-height: 1.5;
+  }
+
+  .mechanic-title {
+    font-family: var(--pixel);
+    font-size: 8px;
+    color: var(--white-pure);
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+
+  .mechanic-desc {
+    font-family: var(--vt);
+    font-size: 20px;
+    color: var(--text-primary);
+    line-height: 1.75;
+  }
+
+  /* ── FINALE CARDS ── */
+  .finale-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  .finale-card {
+    border: 2px solid;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease;
+  }
+
+  .finale-card:hover { transform: translateY(-4px); }
+
+  .finale-villain { border-color: var(--crimson-dim); background: #0a0005; }
+  .finale-villain:hover { border-color: var(--crimson); box-shadow: 0 12px 40px rgba(196,30,58,0.3); }
+
+  .finale-redemption { border-color: #3a3010; background: #0a0a05; }
+  .finale-redemption:hover { border-color: var(--gold); box-shadow: 0 12px 40px rgba(212,160,23,0.25); }
+
+  .finale-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid;
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .finale-villain .finale-header { border-bottom-color: var(--crimson-dim); }
+  .finale-redemption .finale-header { border-bottom-color: #3a3010; }
+
+  .finale-icon {
+    font-size: 24px;
+    width: 40px; height: 40px;
+    border: 2px solid;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .finale-villain .finale-icon { border-color: var(--crimson-dim); color: var(--crimson-bright); }
+  .finale-redemption .finale-icon { border-color: #3a3010; color: var(--gold-bright); }
+
+  .finale-title-wrap .finale-tag {
+    font-family: var(--pixel);
+    font-size: 5.5px;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  .finale-title-wrap .finale-name {
+    font-family: var(--pixel);
+    font-size: 9px;
+    line-height: 1.6;
+  }
+
+  .finale-villain .finale-name { color: var(--crimson-bright); }
+  .finale-redemption .finale-name { color: var(--gold-bright); }
+
+  .finale-body { padding: 20px 24px; }
+
+  .finale-body p {
+    font-family: var(--vt);
+    font-size: 19px;
+    color: var(--text-primary);
+    line-height: 1.75;
+    margin-bottom: 12px;
+  }
+
+  .finale-body p:last-child { margin-bottom: 0; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: rgba(196,30,58,0.06);
+    border: 1px solid var(--crimson-dim);
+    padding: 16px 22px;
+    margin: 20px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .callout.gold-callout {
+    background: rgba(212,160,23,0.05);
+    border-color: #3a3010;
+  }
+
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .callout-text {
+    font-family: var(--vt);
+    font-size: 19px;
+    color: var(--text-primary);
+    line-height: 1.65;
+  }
+
+  /* ── SECTION PROSE ── */
+  .prose {
+    font-family: var(--vt);
+    font-size: 20px;
+    color: var(--text-primary);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .prose strong {
+    color: var(--crimson-bright);
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  .prose.gold-prose strong { color: var(--gold-bright); }
+
+  .section-sub {
+    font-family: var(--pixel);
+    font-size: 8px;
+    color: var(--crimson);
+    margin: 32px 0 16px;
+    letter-spacing: 1px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-sub.gold { color: var(--gold); border-bottom-color: #2a2010; }
+
+  /* ── FACTION ROW ── */
+  .faction-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .faction-accent {
+    width: 6px;
+    flex-shrink: 0;
+  }
+
+  .faction-row.void-faction .faction-accent { background: var(--crimson); }
+  .faction-row.kingdom-faction .faction-accent { background: var(--gold); }
+
+  .faction-content {
+    padding: 20px 24px;
+    background: var(--surface);
+    flex: 1;
+  }
+
+  .faction-name {
+    font-family: var(--pixel);
+    font-size: 8px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+
+  .void-faction .faction-name { color: var(--crimson-bright); }
+  .kingdom-faction .faction-name { color: var(--gold-bright); }
+
+  .faction-desc {
+    font-family: var(--vt);
+    font-size: 19px;
+    color: var(--text-primary);
+    line-height: 1.7;
+  }
+
+  /* ── HOME PORTAL GRID ── */
+  .portal-section-intro {
+    font-family: var(--vt);
+    font-size: 20px;
+    color: var(--text-muted);
+    line-height: 1.75;
+    margin-bottom: 40px;
+    max-width: 600px;
+  }
+
+  .portal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .portal-card {
+    border: 2px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  }
+
+  .portal-card:hover {
+    border-color: var(--crimson);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 32px var(--crimson-glow);
+  }
+
+  .portal-card.gold-portal:hover {
+    border-color: var(--gold);
+    box-shadow: 0 10px 32px var(--gold-glow);
+  }
+
+  .portal-icon-area {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--deep);
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.22s;
+  }
+
+  /* hatching texture on icon area */
+  .portal-icon-area::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 5px,
+      rgba(255,255,255,0.018) 5px,
+      rgba(255,255,255,0.018) 10px
+    );
+    pointer-events: none;
+  }
+
+  .portal-card:hover .portal-icon-area { background: rgba(196,30,58,0.1); border-bottom-color: var(--crimson-dim); }
+  .portal-card.gold-portal:hover .portal-icon-area { background: rgba(212,160,23,0.07); border-bottom-color: #3a3010; }
+
+  .portal-roman {
+    font-family: var(--vt);
+    font-size: 13px;
+    color: var(--crimson-dim);
+    display: block;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .portal-card.gold-portal .portal-roman { color: #5a4510; }
+
+  .portal-card:hover .portal-roman { color: var(--crimson); }
+  .portal-card.gold-portal:hover .portal-roman { color: var(--gold); }
+
+  .portal-icon-glyph { font-size: 32px; line-height: 1; }
+
+  .portal-label {
+    font-family: var(--pixel);
+    font-size: 6.5px;
+    color: var(--text-primary);
+    line-height: 1.85;
+    padding: 14px 10px 16px;
+    display: block;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+
+  .portal-card:hover .portal-label { color: var(--crimson-bright); }
+  .portal-card.gold-portal:hover .portal-label { color: var(--gold-bright); }
+
+  /* ── TABLE OF CONTENTS ── */
+  .toc {
+    background: var(--deep);
+    border: 2px solid var(--border);
+    margin: 0 0 32px 0;
+    display: inline-block;
+    min-width: 270px;
+    max-width: 380px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .toc:hover { border-color: var(--crimson-dim); }
+  .toc.gold-toc:hover { border-color: #3a3010; }
+
+  /* pixel corner dots */
+  .toc::before { content: '▪'; position: absolute; top: -6px; left: -6px; font-size: 8px; color: var(--crimson-dim); line-height: 1; }
+  .toc::after  { content: '▪'; position: absolute; top: -6px; right: -6px; font-size: 8px; color: var(--crimson-dim); line-height: 1; }
+  .toc .toc-inner::before { content: '▪'; position: absolute; bottom: -6px; left: -6px; font-size: 8px; color: var(--crimson-dim); line-height: 1; }
+  .toc .toc-inner::after  { content: '▪'; position: absolute; bottom: -6px; right: -6px; font-size: 8px; color: var(--crimson-dim); line-height: 1; }
+  .toc .toc-inner { position: relative; }
+
+  .toc-title {
+    font-family: var(--pixel);
+    font-size: 7px;
+    color: var(--crimson-bright);
+    padding: 11px 16px 9px;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.6;
+  }
+
+  .toc-title.gold { color: var(--gold-bright); }
+
+  .toc-title-icon { font-size: 12px; }
+
+  .toc-list {
+    list-style: none;
+    padding: 8px 0 10px;
+  }
+
+  .toc-link {
+    display: block;
+    font-family: var(--pixel);
+    font-size: 6.5px;
+    color: var(--crimson);
+    padding: 7px 16px;
+    text-decoration: none;
+    line-height: 1.7;
+    letter-spacing: 0.4px;
+    position: relative;
+    transition: background 0.15s, color 0.15s, padding-left 0.15s;
+  }
+
+  .toc-link .toc-num { color: var(--text-muted); margin-right: 6px; }
+
+  .toc-link:hover {
+    background: rgba(196,30,58,0.1);
+    color: var(--crimson-bright);
+    padding-left: 24px;
+    text-decoration: none;
+  }
+
+  .toc-link:hover::before { content: '▶'; position: absolute; left: 10px; font-size: 5px; top: 50%; transform: translateY(-50%); }
+
+  .toc-link.gold-link { color: var(--gold); }
+  .toc-link.gold-link:hover { background: rgba(212,160,23,0.08); color: var(--gold-bright); }
+
+  /* ── WIKI LINKS (cross-links inline no texto) ── */
+  .wikilink {
+    color: var(--crimson-bright);
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s, color 0.15s;
+    font-style: normal;
+  }
+
+  .wikilink:hover {
+    text-decoration: none;
+    border-bottom-color: var(--crimson-bright);
+    color: #ff4060;
+  }
+
+  .wikilink-gold {
+    color: var(--gold-bright);
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .wikilink-gold:hover {
+    border-bottom-color: var(--gold-bright);
+    color: #ffd060;
+  }
+
+  /* ── INFOBOX (float right, Terraria-style) ── */
+  .infobox {
+    float: right;
+    width: 235px;
+    margin: 0 0 22px 28px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    font-family: var(--vt);
+    font-size: 17px;
+    clear: right;
+    position: relative;
+  }
+
+  /* pixel corner dots */
+  .infobox::before { content: '▪'; position: absolute; top: -6px; left: -6px; font-size: 8px; color: var(--crimson-dim); line-height: 1; }
+  .infobox::after  { content: '▪'; position: absolute; top: -6px; right: -6px; font-size: 8px; color: var(--crimson-dim); line-height: 1; }
+
+  .infobox-title {
+    font-family: var(--pixel);
+    font-size: 7px;
+    padding: 10px 12px;
+    text-align: center;
+    border-bottom: 2px solid var(--border);
+    line-height: 1.7;
+    letter-spacing: 0.5px;
+  }
+
+  .infobox-dante .infobox-title  { background: #1a0a0a; color: var(--crimson-bright); border-bottom-color: var(--crimson-dim); }
+  .infobox-elias .infobox-title  { background: #151005; color: var(--gold-bright); border-bottom-color: #3a3010; }
+
+  .infobox-avatar {
+    width: 100%;
+    padding: 22px 0;
+    background: var(--deep);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .infobox-avatar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(255,255,255,0.015) 4px, rgba(255,255,255,0.015) 8px);
+    pointer-events: none;
+  }
+
+  .infobox-dante .infobox-avatar { box-shadow: inset 0 0 30px rgba(196,30,58,0.12); }
+  .infobox-elias .infobox-avatar { box-shadow: inset 0 0 30px rgba(212,160,23,0.08); }
+
+  .infobox table { width: 100%; border-collapse: collapse; }
+
+  /* zebra stripes */
+  .infobox tr:nth-child(odd)  { background: var(--deep); }
+  .infobox tr:nth-child(even) { background: var(--surface); }
+
+  .infobox td {
+    padding: 7px 10px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(42,42,62,0.6);
+    line-height: 1.45;
+    font-size: 17px;
+  }
+
+  .infobox td:first-child {
+    font-family: var(--pixel);
+    font-size: 5.5px;
+    color: var(--text-muted);
+    width: 40%;
+    padding-top: 10px;
+    line-height: 1.8;
+  }
+
+  .infobox-dante td:first-child { border-right: 2px solid var(--crimson-dim); }
+  .infobox-elias td:first-child { border-right: 2px solid #3a3010; }
+
+  .infobox td:last-child { color: var(--text-primary); }
+
+  .infobox tr:last-child td { border-bottom: none; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--obsidian); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--crimson-dim); }
+
+  /* ── RESPONSIVE — DESKTOP WIDE ── */
+  @media (min-width: 1600px) {
+    .section { max-width: 1000px; padding: 80px 80px 100px; }
+  }
+
+  /* ── RESPONSIVE — DESKTOP COMFORT (sidebar + readable content) ── */
+  @media (min-width: 769px) {
+    /* section max-width keeps lines from becoming too long on ultrawide */
+    .section { max-width: min(900px, calc(100vw - var(--nav-w) - 40px)); }
+
+    /* infobox floats right cleanly with breathing room */
+    .infobox {
+      float: right;
+      clear: right;
+      margin: 4px 0 22px 28px;
+    }
+  }
+
+  /* ── RESPONSIVE — TABLET (769–1024px) ── */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .section { padding: 48px 36px 72px; }
+    .cards-grid { grid-template-columns: 1fr 1fr; }
+    .infobox { width: 200px; }
+  }
+
+  /* ── RESPONSIVE — MOBILE (≤768px) ── */
+  @media (max-width: 768px) {
+    /* Drawer sidebar */
+    .sidebar { transform: translateX(-100%); z-index: 101; }
+    .sidebar.open { transform: translateX(0); box-shadow: 6px 0 32px rgba(0,0,0,0.7); }
+
+    /* show topbar */
+    .topbar { display: flex; }
+
+    /* main layout */
+    .main { margin-left: 0; padding-top: 54px; }
+    .section { padding: 28px 16px 72px; max-width: 100%; }
+
+    /* section title smaller */
+    .section-title { font-size: 10px; line-height: 1.7; }
+    .section-eyebrow { font-size: 6px; }
+
+    /* infobox: full-width, no float, above text */
+    .infobox {
+      float: none !important;
+      width: 100% !important;
+      margin: 0 0 22px 0 !important;
+      clear: both;
     }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    /* TOC full-width */
+    .toc { max-width: 100%; width: 100%; display: block; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    /* grids go single column */
+    .cards-grid { grid-template-columns: 1fr; gap: 16px; }
+    .info-grid  { grid-template-columns: 1fr; gap: 12px; }
+    .finale-grid { grid-template-columns: 1fr; gap: 16px; }
+    .portal-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
-    body {
-      background: var(--void);
-      color: var(--text-primary);
-      font-family: var(--vt);
-      font-size: 20px;
-      line-height: 1.7;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+    /* pixel boxes */
+    .pixel-box { padding: 18px 16px; }
+    .mechanic-block { padding: 24px 16px 20px; }
 
-    /* ── SCANLINE OVERLAY ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.08) 2px, rgba(0, 0, 0, 0.08) 4px);
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* ── SIDEBAR ── */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: var(--nav-w);
-      height: 100vh;
-      background: var(--obsidian);
-      border-right: 2px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      z-index: 100;
-      overflow-y: auto;
-      transition: transform 0.3s ease;
-    }
-
-    .sidebar-logo {
-      padding: 24px 20px 16px;
-      border-bottom: 1px solid var(--border);
-      text-align: center;
-    }
-
-    .sidebar-logo .logo-title {
-      font-family: var(--pixel);
-      font-size: 8px;
-      color: var(--crimson-bright);
-      line-height: 1.8;
-      text-shadow: 0 0 12px var(--crimson);
-      letter-spacing: 1px;
-    }
-
-    .sidebar-logo .logo-sub {
-      font-family: var(--vt);
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-top: 6px;
-      display: block;
-    }
-
-    /* grimoire float */
-    .grimoire-wrap {
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .grimoire {
-      width: 80px;
-      height: 100px;
-      position: relative;
-      animation: grimoire-float 3.5s ease-in-out infinite;
-      image-rendering: pixelated;
-    }
-
-    .grimoire-body {
-      width: 80px;
-      height: 100px;
-      background: #0e0e0e;
-      border: 3px solid #1a1a1a;
-      position: relative;
-      image-rendering: pixelated;
-      box-shadow:
-        inset -4px 0 0 #050505,
-        inset 4px 0 0 #1f1f1f,
-        0 0 20px var(--crimson-glow),
-        0 0 40px rgba(196, 30, 58, 0.12);
-    }
-
-    .grimoire-spine {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 12px;
-      height: 100%;
-      background: #1a0a0a;
-      border-right: 2px solid #2a1010;
-    }
-
-    .grimoire-clover {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 32px;
-      height: 32px;
-    }
-
-    .grimoire-clover .petal {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      background: var(--crimson);
-      border-radius: 50% 50% 0 50%;
-      box-shadow: 0 0 8px var(--crimson-glow);
-      animation: pulse-petal 2s ease-in-out infinite;
-    }
-
-    .grimoire-clover .petal:nth-child(1) {
-      top: 0;
-      left: 10px;
-      transform: rotate(0deg);
-      animation-delay: 0s;
-    }
-
-    .grimoire-clover .petal:nth-child(2) {
-      top: 10px;
-      right: 0;
-      transform: rotate(90deg);
-      animation-delay: 0.5s;
-    }
-
-    .grimoire-clover .petal:nth-child(3) {
-      bottom: 0;
-      left: 10px;
-      transform: rotate(180deg);
-      animation-delay: 1s;
-    }
-
-    .grimoire-clover .petal:nth-child(4) {
-      top: 10px;
-      left: 0;
-      transform: rotate(270deg);
-      animation-delay: 1.5s;
-    }
-
-    .grimoire-clover .stem {
-      position: absolute;
-      bottom: -6px;
-      left: 14px;
-      width: 4px;
-      height: 10px;
-      background: var(--crimson-dim);
-    }
-
-    .grimoire-glitch {
-      position: absolute;
-      inset: 0;
-      animation: glitch-book 5s steps(1) infinite;
-      pointer-events: none;
-    }
-
-    @keyframes grimoire-float {
-
-      0%,
-      100% {
-        transform: translateY(0px) rotate(-1deg);
-        filter: drop-shadow(0 8px 20px var(--crimson-glow));
-      }
-
-      50% {
-        transform: translateY(-10px) rotate(1deg);
-        filter: drop-shadow(0 18px 30px rgba(196, 30, 58, 0.5));
-      }
-    }
-
-    @keyframes pulse-petal {
-
-      0%,
-      100% {
-        opacity: 1;
-        box-shadow: 0 0 8px var(--crimson-glow);
-      }
-
-      50% {
-        opacity: 0.6;
-        box-shadow: 0 0 16px var(--crimson);
-      }
-    }
-
-    @keyframes glitch-book {
-
-      0%,
-      90%,
-      100% {
-        opacity: 0;
-        clip-path: none;
-      }
-
-      91% {
-        opacity: 0.4;
-        clip-path: inset(10% 0 80% 0);
-        transform: translateX(-3px);
-        background: rgba(196, 30, 58, 0.15);
-      }
-
-      93% {
-        opacity: 0.4;
-        clip-path: inset(60% 0 20% 0);
-        transform: translateX(3px);
-        background: rgba(196, 30, 58, 0.1);
-      }
-    }
-
-    /* ── NAV LINKS ── */
-    .nav-links {
-      padding: 8px 0;
-      flex: 1;
-    }
-
+    /* touch-friendly nav items */
     .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 20px;
-      cursor: pointer;
-      font-family: var(--pixel);
-      font-size: 7px;
-      color: var(--text-muted);
-      border-left: 3px solid transparent;
-      transition: all 0.2s ease;
-      line-height: 1.6;
-      position: relative;
-      overflow: hidden;
-      letter-spacing: 0.5px;
-    }
-
-    .nav-item::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--crimson-glow);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .nav-item:hover::before {
-      opacity: 1;
-    }
-
-    .nav-item:hover {
-      color: var(--white-pure);
-      border-left-color: var(--crimson);
-    }
-
-    .nav-item.active {
-      color: var(--crimson-bright);
-      border-left-color: var(--crimson-bright);
-      background: rgba(196, 30, 58, 0.08);
-    }
-
-    .nav-item.active::before {
-      opacity: 0.5;
-    }
-
-    .nav-icon {
-      font-size: 16px;
-      flex-shrink: 0;
-      width: 18px;
-      text-align: center;
-    }
-
-    .nav-roman {
-      font-family: var(--vt);
-      font-size: 13px;
-      color: var(--crimson-dim);
-      flex-shrink: 0;
-      width: 18px;
-    }
-
-    .nav-divider {
-      height: 1px;
-      background: var(--border);
-      margin: 8px 20px;
-    }
-
-    .sidebar-footer {
       padding: 14px 20px;
-      border-top: 1px solid var(--border);
-      font-family: var(--pixel);
-      font-size: 6px;
-      color: var(--text-muted);
-      line-height: 2;
-      text-align: center;
-    }
-
-    /* ── MAIN CONTENT ── */
-    .main {
-      margin-left: var(--nav-w);
-      min-height: 100vh;
-      position: relative;
-    }
-
-    /* ── TOP BAR (mobile) ── */
-    .topbar {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 54px;
-      background: var(--obsidian);
-      border-bottom: 2px solid var(--border);
+      min-height: 48px; /* minimum tap target */
       align-items: center;
-      padding: 0 16px;
-      gap: 12px;
-      z-index: 200;
     }
 
-    .hamburger {
-      background: none;
-      border: 2px solid var(--border);
-      color: var(--text-primary);
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 18px;
-      flex-shrink: 0;
-      transition: border-color 0.2s;
-    }
-
-    .hamburger:hover {
-      border-color: var(--crimson);
-      color: var(--crimson-bright);
-    }
-
-    .topbar-title {
-      font-family: var(--pixel);
-      font-size: 7px;
-      color: var(--crimson-bright);
-      text-shadow: 0 0 10px var(--crimson);
-    }
-
-    /* ── OVERLAY ── */
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 99;
-    }
-
-    .overlay.show {
-      display: block;
-    }
-
-    /* ── SECTIONS ── */
-    .section {
-      display: none;
-      padding: 60px 56px 80px;
-      max-width: 900px;
-      animation: fade-in 0.4s ease;
-      min-height: 100vh;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* ── SECTION HEADER ── */
-    .section-header {
-      margin-bottom: 48px;
-      position: relative;
-      padding-bottom: 24px;
-    }
-
-    .section-eyebrow {
-      font-family: var(--pixel);
-      font-size: 7px;
-      color: var(--crimson);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      display: block;
-    }
-
-    .section-title {
-      font-family: var(--pixel);
-      font-size: 16px;
-      color: var(--white-pure);
-      line-height: 1.6;
-      text-shadow: 0 0 20px var(--crimson-glow), 0 2px 0 var(--void);
-    }
-
-    .section-title.gold {
-      text-shadow: 0 0 20px var(--gold-glow), 0 2px 0 var(--void);
-      color: var(--gold-bright);
-    }
-
-    .section-divider {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, var(--crimson), var(--crimson-dim) 60%, transparent);
-    }
-
-    .section-divider.gold-line {
-      background: linear-gradient(90deg, var(--gold), var(--gold-glow) 60%, transparent);
-    }
-
-    /* ── PIXEL BOX ── */
-    .pixel-box {
-      border: 2px solid var(--border);
-      background: var(--surface);
-      padding: 28px 32px;
-      position: relative;
-      margin-bottom: 28px;
-      transition: border-color 0.2s;
-    }
-
-    .pixel-box::before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border: 2px solid transparent;
-      pointer-events: none;
-    }
-
-    .pixel-box:hover {
-      border-color: var(--crimson-dim);
-    }
-
-    .pixel-box.gold-box {
-      border-color: #3a3010;
-    }
-
-    .pixel-box.gold-box:hover {
-      border-color: var(--gold);
-    }
-
-    .pixel-box-title {
-      font-family: var(--pixel);
-      font-size: 8px;
-      color: var(--crimson-bright);
-      margin-bottom: 16px;
-      letter-spacing: 1px;
-    }
-
-    .pixel-box-title.gold {
-      color: var(--gold-bright);
-    }
-
-    .pixel-box p {
-      font-family: var(--vt);
-      font-size: 20px;
-      color: var(--text-primary);
-      line-height: 1.75;
-      margin-bottom: 14px;
-    }
-
-    .pixel-box p:last-child {
-      margin-bottom: 0;
-    }
-
-    /* ── PIXEL CORNER decorators ── */
-    .corner::before,
-    .corner::after,
-    .corner>span::before,
-    .corner>span::after {
-      content: '▪';
-      position: absolute;
-      font-size: 8px;
-      color: var(--crimson-dim);
-      line-height: 1;
-    }
-
-    .corner::before {
-      top: -5px;
-      left: -5px;
-    }
-
-    .corner::after {
-      top: -5px;
-      right: -5px;
-    }
-
-    .corner>span::before {
-      bottom: -5px;
-      left: -5px;
-    }
-
-    .corner>span::after {
-      bottom: -5px;
-      right: -5px;
-    }
-
-    /* ── CHARACTER CARDS ── */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-bottom: 32px;
-    }
-
-    .char-card {
-      border: 2px solid var(--border);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      cursor: default;
-    }
-
-    .char-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    /* DANTE */
-    .card-dante {
-      background: linear-gradient(160deg, #0a0008 0%, #0f0f18 60%, #150008 100%);
-      border-color: var(--crimson-dim);
-      box-shadow: 0 0 30px rgba(196, 30, 58, 0.2);
-    }
-
-    .card-dante:hover {
-      box-shadow: 0 16px 50px rgba(196, 30, 58, 0.4);
-      border-color: var(--crimson);
-    }
-
-    /* ELIAS */
-    .card-elias {
-      background: linear-gradient(160deg, #12100a 0%, #1a1710 60%, #12110a 100%);
-      border-color: #3a3010;
-      box-shadow: 0 0 30px rgba(212, 160, 23, 0.15);
-    }
-
-    .card-elias:hover {
-      box-shadow: 0 16px 50px rgba(212, 160, 23, 0.3);
-      border-color: var(--gold);
-    }
-
-    .card-banner {
-      height: 8px;
-    }
-
-    .card-dante .card-banner {
-      background: var(--crimson);
-    }
-
-    .card-elias .card-banner {
-      background: var(--gold);
-    }
-
-    .card-body {
-      padding: 24px;
-    }
-
-    .card-avatar {
-      width: 64px;
-      height: 64px;
-      border: 2px solid;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--pixel);
-      font-size: 18px;
-      margin-bottom: 16px;
-      position: relative;
-      image-rendering: pixelated;
-    }
-
-    .card-dante .card-avatar {
-      border-color: var(--crimson);
-      background: var(--void);
-      color: var(--crimson-bright);
-      box-shadow: 0 0 16px var(--crimson-glow), inset 0 0 12px rgba(196, 30, 58, 0.1);
-      animation: avatar-pulse 3s ease-in-out infinite;
-    }
-
-    .card-elias .card-avatar {
-      border-color: var(--gold);
-      background: #0e0c06;
-      color: var(--gold-bright);
-      box-shadow: 0 0 16px var(--gold-glow), inset 0 0 12px rgba(212, 160, 23, 0.1);
-    }
-
-    @keyframes avatar-pulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 16px var(--crimson-glow), inset 0 0 12px rgba(196, 30, 58, 0.1);
-      }
-
-      50% {
-        box-shadow: 0 0 28px rgba(196, 30, 58, 0.6), inset 0 0 20px rgba(196, 30, 58, 0.2);
-      }
-    }
-
-    .card-name {
-      font-family: var(--pixel);
-      font-size: 10px;
-      margin-bottom: 4px;
-      line-height: 1.5;
-    }
-
-    .card-dante .card-name {
-      color: var(--crimson-bright);
-    }
-
-    .card-elias .card-name {
-      color: var(--gold-bright);
-    }
-
-    .card-epithet {
-      font-family: var(--vt);
-      font-size: 16px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-      font-style: italic;
-    }
-
-    .card-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .stat-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--pixel);
-      font-size: 6px;
-    }
-
-    .stat-label {
-      color: var(--text-muted);
-      width: 70px;
-      flex-shrink: 0;
-      line-height: 1.8;
-    }
-
-    .stat-bar {
-      flex: 1;
-      height: 8px;
-      background: var(--deep);
-      border: 1px solid var(--border);
-      position: relative;
-      image-rendering: pixelated;
-    }
-
-    .stat-fill {
-      height: 100%;
-      position: relative;
-      animation: bar-reveal 1s ease forwards;
-      transform-origin: left;
-    }
-
-    .card-dante .stat-fill {
-      background: var(--crimson);
-      box-shadow: 2px 0 6px var(--crimson-glow);
-    }
-
-    .card-elias .stat-fill {
-      background: var(--gold);
-      box-shadow: 2px 0 6px var(--gold-glow);
-    }
-
-    @keyframes bar-reveal {
-      from {
-        width: 0 !important;
-      }
-    }
-
-    .stat-val {
-      color: var(--text-muted);
-      width: 24px;
-      text-align: right;
-    }
-
-    .card-tag-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 16px;
-    }
-
-    .tag {
-      font-family: var(--pixel);
-      font-size: 5.5px;
-      padding: 4px 8px;
-      border: 1px solid;
-      line-height: 1.6;
-      letter-spacing: 0.5px;
-    }
-
-    .card-dante .tag {
-      border-color: var(--crimson-dim);
-      color: var(--crimson);
-      background: rgba(196, 30, 58, 0.08);
-    }
-
-    .card-elias .tag {
-      border-color: #3a3010;
-      color: var(--gold);
-      background: rgba(212, 160, 23, 0.08);
-    }
-
-    /* ── LORE QUOTE ── */
-    .lore-quote {
-      border-left: 3px solid var(--crimson);
-      padding: 16px 24px;
-      background: var(--deep);
-      margin: 24px 0;
-      position: relative;
-      font-family: var(--vt);
-      font-size: 22px;
-      font-style: italic;
-      color: var(--white-dim);
-      line-height: 1.6;
-    }
-
-    .lore-quote.gold-quote {
-      border-left-color: var(--gold);
-    }
-
-    .lore-quote::before {
-      content: '"';
-      position: absolute;
-      top: -8px;
-      left: 16px;
-      font-family: var(--cinzel);
-      font-size: 48px;
-      color: var(--crimson-dim);
-      line-height: 1;
-    }
-
-    .lore-quote.gold-quote::before {
-      color: #3a3010;
-    }
-
-    .lore-quote-attr {
-      display: block;
-      margin-top: 10px;
-      font-size: 15px;
-      font-style: normal;
-      color: var(--text-muted);
-      font-family: var(--pixel);
-      font-size: 6px;
-    }
-
-    /* ── INFO GRID ── */
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .info-cell {
-      background: var(--deep);
-      border: 1px solid var(--border);
-      padding: 16px 20px;
-      transition: border-color 0.2s;
-    }
-
-    .info-cell:hover {
-      border-color: var(--crimson-dim);
-    }
-
-    .info-cell.gold-cell:hover {
-      border-color: #3a3010;
-    }
-
-    .info-cell-label {
-      font-family: var(--pixel);
-      font-size: 6px;
-      color: var(--crimson);
-      margin-bottom: 8px;
-      letter-spacing: 1px;
-    }
-
-    .info-cell-label.gold {
-      color: var(--gold);
-    }
-
-    .info-cell-value {
-      font-family: var(--vt);
-      font-size: 19px;
-      color: var(--text-primary);
-      line-height: 1.5;
-    }
-
-    /* ── MECHANICS ── */
-    .mechanic-block {
-      background: var(--deep);
-      border: 2px solid var(--border);
-      padding: 28px 32px;
-      margin-bottom: 20px;
-      position: relative;
-      transition: border-color 0.2s;
-    }
-
-    .mechanic-block:hover {
-      border-color: var(--crimson-dim);
-    }
-
-    .mechanic-number {
-      position: absolute;
-      top: -14px;
-      left: 20px;
-      background: var(--crimson);
-      font-family: var(--pixel);
-      font-size: 8px;
-      padding: 4px 10px;
-      color: var(--white-pure);
-      line-height: 1.5;
-    }
-
-    .mechanic-title {
-      font-family: var(--pixel);
-      font-size: 8px;
-      color: var(--white-pure);
-      margin-bottom: 14px;
-      line-height: 1.6;
-    }
-
-    .mechanic-desc {
-      font-family: var(--vt);
-      font-size: 20px;
-      color: var(--text-primary);
-      line-height: 1.75;
-    }
-
-    /* ── FINALE CARDS ── */
-    .finale-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 32px;
-    }
-
-    .finale-card {
-      border: 2px solid;
-      padding: 0;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.25s ease;
-    }
-
-    .finale-card:hover {
-      transform: translateY(-4px);
-    }
-
-    .finale-villain {
-      border-color: var(--crimson-dim);
-      background: #0a0005;
-    }
-
-    .finale-villain:hover {
-      border-color: var(--crimson);
-      box-shadow: 0 12px 40px rgba(196, 30, 58, 0.3);
-    }
-
-    .finale-redemption {
-      border-color: #3a3010;
-      background: #0a0a05;
-    }
-
-    .finale-redemption:hover {
-      border-color: var(--gold);
-      box-shadow: 0 12px 40px rgba(212, 160, 23, 0.25);
-    }
-
-    .finale-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .finale-villain .finale-header {
-      border-bottom-color: var(--crimson-dim);
-    }
-
-    .finale-redemption .finale-header {
-      border-bottom-color: #3a3010;
-    }
-
-    .finale-icon {
-      font-size: 24px;
-      width: 40px;
-      height: 40px;
-      border: 2px solid;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .finale-villain .finale-icon {
-      border-color: var(--crimson-dim);
-      color: var(--crimson-bright);
-    }
-
-    .finale-redemption .finale-icon {
-      border-color: #3a3010;
-      color: var(--gold-bright);
-    }
-
-    .finale-title-wrap .finale-tag {
-      font-family: var(--pixel);
-      font-size: 5.5px;
-      color: var(--text-muted);
-      display: block;
-      margin-bottom: 4px;
-      letter-spacing: 1px;
-    }
-
-    .finale-title-wrap .finale-name {
-      font-family: var(--pixel);
-      font-size: 9px;
-      line-height: 1.6;
-    }
-
-    .finale-villain .finale-name {
-      color: var(--crimson-bright);
-    }
-
-    .finale-redemption .finale-name {
-      color: var(--gold-bright);
-    }
-
-    .finale-body {
-      padding: 20px 24px;
-    }
-
-    .finale-body p {
-      font-family: var(--vt);
-      font-size: 19px;
-      color: var(--text-primary);
-      line-height: 1.75;
-      margin-bottom: 12px;
-    }
-
-    .finale-body p:last-child {
-      margin-bottom: 0;
-    }
-
-    /* ── CALLOUT ── */
-    .callout {
-      background: rgba(196, 30, 58, 0.06);
-      border: 1px solid var(--crimson-dim);
-      padding: 16px 22px;
-      margin: 20px 0;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .callout.gold-callout {
-      background: rgba(212, 160, 23, 0.05);
-      border-color: #3a3010;
-    }
-
-    .callout-icon {
-      font-size: 18px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .callout-text {
-      font-family: var(--vt);
-      font-size: 19px;
-      color: var(--text-primary);
-      line-height: 1.65;
-    }
-
-    /* ── SECTION PROSE ── */
-    .prose {
-      font-family: var(--vt);
-      font-size: 20px;
-      color: var(--text-primary);
-      line-height: 1.8;
-      margin-bottom: 24px;
-    }
-
-    .prose strong {
-      color: var(--crimson-bright);
-      font-style: normal;
-      font-weight: normal;
-    }
-
-    .prose.gold-prose strong {
-      color: var(--gold-bright);
-    }
-
-    .section-sub {
-      font-family: var(--pixel);
-      font-size: 8px;
-      color: var(--crimson);
-      margin: 32px 0 16px;
-      letter-spacing: 1px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-sub.gold {
-      color: var(--gold);
-      border-bottom-color: #2a2010;
-    }
-
-    /* ── FACTION ROW ── */
-    .faction-row {
-      display: flex;
-      align-items: stretch;
-      gap: 0;
-      margin-bottom: 20px;
-      border: 1px solid var(--border);
-    }
-
-    .faction-accent {
-      width: 6px;
-      flex-shrink: 0;
-    }
-
-    .faction-row.void-faction .faction-accent {
-      background: var(--crimson);
-    }
-
-    .faction-row.kingdom-faction .faction-accent {
-      background: var(--gold);
-    }
-
-    .faction-content {
-      padding: 20px 24px;
-      background: var(--surface);
-      flex: 1;
-    }
-
-    .faction-name {
-      font-family: var(--pixel);
-      font-size: 8px;
-      margin-bottom: 10px;
-      line-height: 1.6;
-    }
-
-    .void-faction .faction-name {
-      color: var(--crimson-bright);
-    }
-
-    .kingdom-faction .faction-name {
-      color: var(--gold-bright);
-    }
-
-    .faction-desc {
-      font-family: var(--vt);
-      font-size: 19px;
-      color: var(--text-primary);
-      line-height: 1.7;
-    }
-
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--obsidian);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--crimson-dim);
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .topbar {
-        display: flex;
-      }
-
-      .main {
-        margin-left: 0;
-        padding-top: 54px;
-      }
-
-      .section {
-        padding: 32px 20px 60px;
-      }
-
-      .cards-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .finale-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .section-title {
-        font-size: 10px;
-      }
-
-      .pixel-box {
-        padding: 20px;
-      }
-    }
-
-    @media (min-width: 1600px) {
-      .main {
-        margin-left: var(--nav-w);
-      }
-
-      .section {
-        max-width: 1000px;
-        padding: 80px 80px 100px;
-      }
-    }
-  </style>
+    /* touch-friendly toc links */
+    .toc-link { padding: 9px 16px; min-height: 44px; display: flex; align-items: center; }
+
+    /* portal labels */
+    .portal-label { font-size: 5.5px; padding: 10px 6px 12px; }
+
+    /* prose / body font comfortable on mobile */
+    .prose  { font-size: 19px; }
+    .mechanic-desc { font-size: 19px; }
+    .faction-desc  { font-size: 18px; }
+    .finale-body p { font-size: 18px; }
+    .callout-text  { font-size: 18px; }
+    .info-cell-value { font-size: 17px; }
+
+    /* infobox table smaller on mobile */
+    .infobox td { font-size: 15px; padding: 6px 8px; }
+    .infobox td:first-child { font-size: 5px; }
+
+    /* tables: horizontal scroll instead of layout break */
+    .info-grid .info-cell,
+    .infobox table { min-width: 0; }
+
+    /* lore quote */
+    .lore-quote { font-size: 19px; padding: 14px 18px 14px 22px; }
+
+    /* card stats label narrower */
+    .stat-label { width: 58px; font-size: 5.5px; }
+    .stat-val { font-size: 5.5px; }
+
+    /* section sub headings */
+    .section-sub { font-size: 7px; }
+
+    /* mechanic number badge */
+    .mechanic-number { font-size: 7px; padding: 3px 8px; top: -12px; }
+    .mechanic-title  { font-size: 7px; }
+
+    /* card name smaller */
+    .card-name { font-size: 8px; }
+
+    /* hamburger bigger tap area */
+    .hamburger { width: 42px; height: 42px; font-size: 20px; }
+
+    /* finale header wraps gracefully */
+    .finale-header { flex-wrap: wrap; gap: 8px; }
+    .finale-name { font-size: 7.5px; }
+    .finale-tag  { font-size: 5px; }
+  }
+
+  /* ── RESPONSIVE — SMALL PHONES (≤380px) ── */
+  @media (max-width: 380px) {
+    .portal-grid { grid-template-columns: 1fr; }
+    .section { padding: 24px 12px 64px; }
+    .section-title { font-size: 8.5px; }
+    .cards-grid { gap: 12px; }
+  }
+</style>
 </head>
-
 <body>
 
-  <!-- OVERLAY (mobile) -->
-  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<!-- OVERLAY (mobile) -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-  <!-- SIDEBAR -->
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-title">O GRIMÓRIO<br>DO DESERTO</div>
-      <span class="logo-sub">A Queda do Quinto Trevo</span>
-    </div>
-
-    <div class="grimoire-wrap">
-      <div class="grimoire" title="O Grimório Negro">
-        <div class="grimoire-body">
-          <div class="grimoire-spine"></div>
-          <div class="grimoire-clover">
-            <div class="petal"></div>
-            <div class="petal"></div>
-            <div class="petal"></div>
-            <div class="petal"></div>
-            <div class="stem"></div>
-          </div>
-          <div class="grimoire-glitch"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="nav-links">
-      <div class="nav-item active" data-section="prologo" onclick="navigate('prologo', this)">
-        <span class="nav-roman">I</span>
-        <span>O PRÓLOGO</span>
-      </div>
-      <div class="nav-item" data-section="personagens" onclick="navigate('personagens', this)">
-        <span class="nav-roman">II</span>
-        <span>PERSONAGENS</span>
-      </div>
-      <div class="nav-divider"></div>
-      <div class="nav-item" data-section="grimorio" onclick="navigate('grimorio', this)">
-        <span class="nav-roman">III</span>
-        <span>O GRIMÓRIO &<br>A 5ª FOLHA</span>
-      </div>
-      <div class="nav-item" data-section="mundo" onclick="navigate('mundo', this)">
-        <span class="nav-roman">IV</span>
-        <span>O MUNDO</span>
-      </div>
-      <div class="nav-divider"></div>
-      <div class="nav-item" data-section="mecanicas" onclick="navigate('mecanicas', this)">
-        <span class="nav-roman">V</span>
-        <span>MECÂNICAS<br>DE SISTEMA</span>
-      </div>
-      <div class="nav-item" data-section="finais" onclick="navigate('finais', this)">
-        <span class="nav-roman">VI</span>
-        <span>FINAIS DA<br>CAMPANHA</span>
-      </div>
-    </div>
-
-    <div class="sidebar-footer">
-      VERSÃO 1.0 · ACESSO RESTRITO<br>
-      COMPÊNDIO DO MESTRE
-    </div>
-  </nav>
-
-  <!-- TOPBAR (mobile) -->
-  <div class="topbar">
-    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
-    <span class="topbar-title" id="topbar-title">O GRIMÓRIO DO DESERTO</span>
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-title">O GRIMÓRIO<br>DO DESERTO</div>
+    <span class="logo-sub">A Queda do Quinto Trevo</span>
   </div>
 
-  <!-- MAIN -->
-  <main class="main">
+  <div class="grimoire-wrap">
+    <div class="grimoire" title="O Grimório Negro">
+      <div class="grimoire-body">
+        <div class="grimoire-spine"></div>
+        <div class="grimoire-clover">
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="stem"></div>
+        </div>
+        <div class="grimoire-glitch"></div>
+      </div>
+    </div>
+  </div>
 
-    <!-- ══════════════════════════════════════
+  <div class="nav-links">
+    <div class="nav-item active" data-section="home" onclick="navigate('home', this)">
+      <span class="nav-roman">⌂</span>
+      <span>INÍCIO</span>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-item" data-section="prologo" onclick="navigate('prologo', this)">
+      <span class="nav-roman">I</span>
+      <span>O PRÓLOGO</span>
+    </div>
+    <div class="nav-item" data-section="personagens" onclick="navigate('personagens', this)">
+      <span class="nav-roman">II</span>
+      <span>PERSONAGENS</span>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-item" data-section="grimorio" onclick="navigate('grimorio', this)">
+      <span class="nav-roman">III</span>
+      <span>O GRIMÓRIO &<br>A 5ª FOLHA</span>
+    </div>
+    <div class="nav-item" data-section="mundo" onclick="navigate('mundo', this)">
+      <span class="nav-roman">IV</span>
+      <span>O MUNDO</span>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-item" data-section="mecanicas" onclick="navigate('mecanicas', this)">
+      <span class="nav-roman">V</span>
+      <span>MECÂNICAS<br>DE SISTEMA</span>
+    </div>
+    <div class="nav-item" data-section="finais" onclick="navigate('finais', this)">
+      <span class="nav-roman">VI</span>
+      <span>FINAIS DA<br>CAMPANHA</span>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    VERSÃO 1.0 · ACESSO RESTRITO<br>
+    COMPÊNDIO DO MESTRE
+  </div>
+</nav>
+
+<!-- TOPBAR (mobile) -->
+<div class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+  <span class="topbar-title" id="topbar-title">O GRIMÓRIO DO DESERTO</span>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ══════════════════════════════════════
+       HOME — PORTAL DE ENTRADA
+  ══════════════════════════════════════ -->
+  <section class="section active" id="sec-home">
+    <div class="section-header">
+      <span class="section-eyebrow">Compêndio Interativo</span>
+      <h1 class="section-title">O GRIMÓRIO<br>DO DESERTO</h1>
+      <div class="section-divider"></div>
+    </div>
+
+    <p class="portal-section-intro">
+      Bem-vindo ao arquivo proibido de Aethelgard. Selecione um portal abaixo para navegar pelo compêndio — lore, personagens, mecânicas e os finais da campanha estão todos catalogados aqui. Acesso restrito ao Mestre e portadores de grimório.
+    </p>
+
+    <div class="portal-grid">
+
+      <div class="portal-card" onclick="navigate('prologo', document.querySelector('[data-section=prologo]'))">
+        <div class="portal-icon-area">
+          <span class="portal-roman">I</span>
+          <span class="portal-icon-glyph">📜</span>
+        </div>
+        <span class="portal-label">O PRÓLOGO</span>
+      </div>
+
+      <div class="portal-card" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))">
+        <div class="portal-icon-area">
+          <span class="portal-roman">II</span>
+          <span class="portal-icon-glyph">⚔</span>
+        </div>
+        <span class="portal-label">PERSONAGENS</span>
+      </div>
+
+      <div class="portal-card" onclick="navigate('grimorio', document.querySelector('[data-section=grimorio]'))">
+        <div class="portal-icon-area">
+          <span class="portal-roman">III</span>
+          <span class="portal-icon-glyph">✦</span>
+        </div>
+        <span class="portal-label">O GRIMÓRIO &<br>A 5ª FOLHA</span>
+      </div>
+
+      <div class="portal-card gold-portal" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">
+        <div class="portal-icon-area">
+          <span class="portal-roman">IV</span>
+          <span class="portal-icon-glyph">🌍</span>
+        </div>
+        <span class="portal-label">O MUNDO</span>
+      </div>
+
+      <div class="portal-card" onclick="navigate('mecanicas', document.querySelector('[data-section=mecanicas]'))">
+        <div class="portal-icon-area">
+          <span class="portal-roman">V</span>
+          <span class="portal-icon-glyph">⚙</span>
+        </div>
+        <span class="portal-label">MECÂNICAS<br>DE SISTEMA</span>
+      </div>
+
+      <div class="portal-card gold-portal" onclick="navigate('finais', document.querySelector('[data-section=finais]'))">
+        <div class="portal-icon-area">
+          <span class="portal-roman">VI</span>
+          <span class="portal-icon-glyph">⚖</span>
+        </div>
+        <span class="portal-label">FINAIS DA<br>CAMPANHA</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
        I — PRÓLOGO
   ══════════════════════════════════════ -->
-    <section class="section active" id="sec-prologo">
-      <div class="section-header">
-        <span class="section-eyebrow">Capítulo I</span>
-        <h1 class="section-title">O PRÓLOGO</h1>
-        <div class="section-divider"></div>
-      </div>
+  <section class="section" id="sec-prologo">
+    <div class="section-header">
+      <span class="section-eyebrow">Capítulo I</span>
+      <h1 class="section-title">O PRÓLOGO</h1>
+      <div class="section-divider"></div>
+    </div>
 
-      <div class="lore-quote">
-        Antes do vácuo, havia Aethelgard. Antes de Aethelgard, havia apenas a sombra de um poder que o mundo ainda não
-        compreendia.
-        <span class="lore-quote-attr">— Crônicas do Pilar, Vol. I</span>
-      </div>
+    <div class="lore-quote">
+      Antes do vácuo, havia Aethelgard. Antes de Aethelgard, havia apenas a sombra de um poder que o mundo ainda não compreendia.
+      <span class="lore-quote-attr">— Crônicas do Pilar, Vol. I</span>
+    </div>
 
-      <h2 class="section-sub">A TERRA DE AETHELGARD</h2>
-
-      <div class="pixel-box corner"><span>
-          <div class="pixel-box-title">ORIGEM DO MUNDO</div>
-          <p>Aethelgard é um reino vasto, moldado por séculos de magia e política. Uma terra onde o poder mágico flui
-            através de grimórios — artefatos raros que escolhem seus portadores, e não o contrário. Cada grimório contém
-            folhas de poder, e o número de folhas define a hierarquia mágica do mundo.</p>
-          <p>Quatro trevos representam os quatro pilares do equilíbrio: <strong>Terra, Chama, Vento e Água</strong>. O
-            Quinto Trevo, porém, nunca havia surgido — ou assim todos acreditavam.</p>
-        </span></div>
-
-      <h2 class="section-sub">OS IRMÃOS</h2>
-
-      <p class="prose">
-        Em uma aldeia esquecida nas franjas do Reino, dois irmãos cresceram sob o mesmo teto mas sob destinos
-        completamente opostos. <strong>Elias</strong>, o mais velho, era o favorito — um portento que desde cedo
-        manifestou afinidade com a magia luminosa do Reino. Seu grimório surgiu aos 14 anos, reluzente e dourado, selado
-        com o Quarto Trevo.
-      </p>
-
-      <p class="prose">
-        <strong>Dante</strong> nunca recebeu grimório. Cresceu na sombra do irmão, tratado como o "sem-graça" da
-        família, o erro da linha sanguínea. Mas na noite de seu décimo-sétimo aniversário, algo acordou nas profundezas
-        do Grimório Negro — um artefato que ninguém havia tocado em três séculos porque todos que tentavam eram
-        consumidos por ele.
-      </p>
-
-      <div class="callout">
-        <span class="callout-icon">⚠</span>
-        <span class="callout-text">O Grimório Negro não escolheu Dante. Dante <em>sobreviveu</em> ao Grimório Negro — o
-          que é infinitamente pior para o Reino.</span>
-      </div>
-
-      <h2 class="section-sub">A RUPTURA</h2>
-
-      <div class="info-grid">
-        <div class="info-cell">
-          <div class="info-cell-label">EVENTO INICIAL</div>
-          <div class="info-cell-value">A noite em que o Grimório Negro desperta, consumindo metade da aldeia em névoa
-            escura.</div>
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc" aria-label="Índice do Prólogo">
+      <div class="toc-inner">
+        <div class="toc-title">
+          <span class="toc-title-icon">▤</span> ÍNDICE
         </div>
-        <div class="info-cell">
-          <div class="info-cell-label">CONSEQUÊNCIA IMEDIATA</div>
-          <div class="info-cell-value">Elias é convocado pelo Reino para eliminar a "anomalia". Dante foge para o
-            deserto de Veth'kaar.</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">O DESERTO</div>
-          <div class="info-cell-value">Região proibida além das fronteiras reais. Diz-se que o Vácuo tem lá sua boca —
-            onde a realidade é fina como papel.</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">O QUE ESTÁ EM JOGO</div>
-          <div class="info-cell-value">O equilíbrio do Pilar do Mundo. Se o Quinto Trevo se completar, a hierarquia
-            mágica de Aethelgard colapsa.</div>
-        </div>
+        <ul class="toc-list">
+          <li class="toc-item"><a class="toc-link" href="#prologo-terra"><span class="toc-num">1.</span> A Terra de Aethelgard</a></li>
+          <li class="toc-item"><a class="toc-link" href="#prologo-irmaos"><span class="toc-num">2.</span> Os Irmãos</a></li>
+          <li class="toc-item"><a class="toc-link" href="#prologo-ruptura"><span class="toc-num">3.</span> A Ruptura</a></li>
+        </ul>
       </div>
-    </section>
+    </nav>
 
-    <!-- ══════════════════════════════════════
-       II — PERSONAGENS
-  ══════════════════════════════════════ -->
-    <section class="section" id="sec-personagens">
-      <div class="section-header">
-        <span class="section-eyebrow">Capítulo II</span>
-        <h1 class="section-title">PERSONAGENS</h1>
-        <div class="section-divider"></div>
+    <h2 class="section-sub" id="prologo-terra">A TERRA DE AETHELGARD</h2>
+
+    <div class="pixel-box corner"><span>
+      <div class="pixel-box-title">ORIGEM DO MUNDO</div>
+      <p>Aethelgard é um reino vasto, moldado por séculos de magia e política. Uma terra onde o poder mágico flui através de <a class="wikilink" onclick="navigate('grimorio', document.querySelector('[data-section=grimorio]'))">grimórios</a> — artefatos raros que escolhem seus portadores, e não o contrário. Cada grimório contém folhas de poder, e o número de folhas define a hierarquia mágica do mundo.</p>
+      <p>Quatro trevos representam os quatro pilares do equilíbrio: <strong>Terra, Chama, Vento e Água</strong>. O <a class="wikilink" onclick="navigate('grimorio', document.querySelector('[data-section=grimorio]'))">Quinto Trevo</a>, porém, nunca havia surgido — ou assim todos acreditavam.</p>
+    </span></div>
+
+    <h2 class="section-sub" id="prologo-irmaos">OS IRMÃOS</h2>
+
+    <p class="prose">
+      Em uma aldeia esquecida nas franjas do Reino, dois irmãos cresceram sob o mesmo teto mas sob destinos completamente opostos. <a class="wikilink-gold" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))"><strong>Elias</strong></a>, o mais velho, era o favorito — um portento que desde cedo manifestou afinidade com a magia luminosa do <a class="wikilink-gold" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Reino</a>. Seu grimório surgiu aos 14 anos, reluzente e dourado, selado com o Quarto Trevo.
+    </p>
+
+    <p class="prose">
+      <a class="wikilink" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))"><strong>Dante</strong></a> nunca recebeu grimório. Cresceu na sombra do irmão, tratado como o "sem-graça" da família, o erro da linha sanguínea. Mas na noite de seu décimo-sétimo aniversário, algo acordou nas profundezas do <a class="wikilink" onclick="navigate('grimorio', document.querySelector('[data-section=grimorio]'))">Grimório Negro</a> — um artefato que ninguém havia tocado em três séculos porque todos que tentavam eram consumidos por ele.
+    </p>
+
+    <div class="callout">
+      <span class="callout-icon">⚠</span>
+      <span class="callout-text">O Grimório Negro não escolheu Dante. Dante <em>sobreviveu</em> ao Grimório Negro — o que é infinitamente pior para o Reino.</span>
+    </div>
+
+    <h2 class="section-sub" id="prologo-ruptura">A RUPTURA</h2>
+
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-cell-label">EVENTO INICIAL</div>
+        <div class="info-cell-value">A noite em que o <a class="wikilink" onclick="navigate('grimorio', document.querySelector('[data-section=grimorio]'))">Grimório Negro</a> desperta, consumindo metade da aldeia em névoa escura.</div>
       </div>
+      <div class="info-cell">
+        <div class="info-cell-label">CONSEQUÊNCIA IMEDIATA</div>
+        <div class="info-cell-value">Elias é convocado pelo Reino para eliminar a "anomalia". Dante foge para o <a class="wikilink" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">deserto de Veth'kaar</a>.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-cell-label">O DESERTO</div>
+        <div class="info-cell-value">Região proibida além das fronteiras reais. Diz-se que o <a class="wikilink" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Vácuo</a> tem lá sua boca — onde a realidade é fina como papel.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-cell-label">O QUE ESTÁ EM JOGO</div>
+        <div class="info-cell-value">O equilíbrio do <a class="wikilink" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Pilar do Mundo</a>. Se o Quinto Trevo se completar, a hierarquia mágica de Aethelgard colapsa.</div>
+      </div>
+    </div>
+  </section>
 
-      <div class="cards-grid">
-        <!-- DANTE -->
-        <div class="char-card card-dante">
-          <div class="card-banner"></div>
-          <div class="card-body">
-            <div class="card-avatar">✦</div>
-            <div class="card-name">DANTE</div>
-            <div class="card-epithet">"O Vazio Que Caminha"</div>
-            <div class="card-stats">
-              <div class="stat-row">
-                <span class="stat-label">PODER</span>
-                <div class="stat-bar">
-                  <div class="stat-fill" style="width:92%"></div>
-                </div>
-                <span class="stat-val">92</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-label">CONTROLE</span>
-                <div class="stat-bar">
-                  <div class="stat-fill" style="width:38%"></div>
-                </div>
-                <span class="stat-val">38</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-label">INÉRCIA</span>
-                <div class="stat-bar">
-                  <div class="stat-fill" style="width:MAX%"></div>
-                  <div class="stat-fill" style="width:100%"></div>
-                </div>
-                <span class="stat-val">∞</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-label">LEALDADE</span>
-                <div class="stat-bar">
-                  <div class="stat-fill" style="width:15%"></div>
-                </div>
-                <span class="stat-val">15</span>
-              </div>
+  <section class="section" id="sec-personagens">
+    <div class="section-header">
+      <span class="section-eyebrow">Capítulo II</span>
+      <h1 class="section-title">PERSONAGENS</h1>
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- TOC -->
+    <nav class="toc" aria-label="Índice de Personagens">
+      <div class="toc-inner">
+        <div class="toc-title"><span class="toc-title-icon">▤</span> ÍNDICE</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a class="toc-link" href="#pers-cards"><span class="toc-num">1.</span> Ficha Rápida</a></li>
+          <li class="toc-item"><a class="toc-link" href="#pers-dante"><span class="toc-num">2.</span> Dante — O Vazio</a></li>
+          <li class="toc-item"><a class="toc-link gold-link" href="#pers-elias"><span class="toc-num">3.</span> Elias — A Lâmina Dourada</a></li>
+          <li class="toc-item"><a class="toc-link gold-link" href="#pers-quote"><span class="toc-num">4.</span> Citação Canônica</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="cards-grid" id="pers-cards">
+      <!-- DANTE -->
+      <div class="char-card card-dante">
+        <div class="card-banner"></div>
+        <div class="card-body">
+          <div class="card-avatar">✦</div>
+          <div class="card-name">DANTE</div>
+          <div class="card-epithet">"O Vazio Que Caminha"</div>
+          <div class="card-stats">
+            <div class="stat-row">
+              <span class="stat-label">PODER</span>
+              <div class="stat-bar"><div class="stat-fill" style="width:92%"></div></div>
+              <span class="stat-val">92</span>
             </div>
-            <div class="card-tag-row">
-              <span class="tag">PORTADOR DO VÁCUO</span>
-              <span class="tag">5ª FOLHA</span>
-              <span class="tag">ABSORVEDOR</span>
-              <span class="tag">AMALDIÇOADO</span>
+            <div class="stat-row">
+              <span class="stat-label">CONTROLE</span>
+              <div class="stat-bar"><div class="stat-fill" style="width:38%"></div></div>
+              <span class="stat-val">38</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">INÉRCIA</span>
+              <div class="stat-bar"><div class="stat-fill" style="width:100%"></div></div>
+              <span class="stat-val">∞</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">LEALDADE</span>
+              <div class="stat-bar"><div class="stat-fill" style="width:15%"></div></div>
+              <span class="stat-val">15</span>
             </div>
           </div>
-        </div>
-
-        <!-- ELIAS -->
-        <div class="char-card card-elias">
-          <div class="card-banner"></div>
-          <div class="card-body">
-            <div class="card-avatar">☀</div>
-            <div class="card-name">ELIAS</div>
-            <div class="card-epithet">"A Lâmina Dourada do Reino"</div>
-            <div class="card-stats">
-              <div class="stat-row">
-                <span class="stat-label">PODER</span>
-                <div class="stat-bar">
-                  <div class="stat-fill" style="width:78%"></div>
-                </div>
-                <span class="stat-val">78</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-label">CONTROLE</span>
-                <div class="stat-bar">
-                  <div class="stat-fill" style="width:95%"></div>
-                </div>
-                <span class="stat-val">95</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-label">INÉRCIA</span>
-                <div class="stat-bar">
-                  <div class="stat-fill" style="width:42%"></div>
-                </div>
-                <span class="stat-val">42</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-label">LEALDADE</span>
-                <div class="stat-bar">
-                  <div class="stat-fill" style="width:88%"></div>
-                </div>
-                <span class="stat-val">88</span>
-              </div>
-            </div>
-            <div class="card-tag-row">
-              <span class="tag">CAVALEIRO DO REINO</span>
-              <span class="tag">4º TREVO</span>
-              <span class="tag">EXECUTIVO</span>
-              <span class="tag">HERDEIRO</span>
-            </div>
+          <div class="card-tag-row">
+            <span class="tag">PORTADOR DO VÁCUO</span>
+            <span class="tag">5ª FOLHA</span>
+            <span class="tag">ABSORVEDOR</span>
+            <span class="tag">AMALDIÇOADO</span>
           </div>
         </div>
       </div>
 
-      <h2 class="section-sub">PERFIS DETALHADOS</h2>
-
-      <div class="pixel-box">
-        <div class="pixel-box-title">▸ DANTE — O VAZIO</div>
-        <p>Protagonista da campanha. Dante não escolheu o poder que carrega — ele sobreviveu a ele. O Grimório Negro o
-          fundiu com o conceito de <strong>Vácuo</strong>: a ausência absoluta que devora tudo. Sua magia não cria — ela
-          consome, absorve, anula. Cada feitiço que lança custa um fragmento de sua humanidade.</p>
-        <p>Psicologicamente, Dante oscila entre o ressentimento pelo abandono da família e um frio distanciamento que
-          cresce com cada uso do Grimório. Os jogadores controlarão suas ações e decidirão se ele sucumbe ao Vácuo ou
-          encontra um caminho de volta.</p>
-      </div>
-
-      <div class="pixel-box gold-box">
-        <div class="pixel-box-title gold">▸ ELIAS — A LÂMINA DOURADA</div>
-        <p>Antagonista principal. Elias não é um vilão por crueldade — é um vilão por convicção. Ele genuinamente
-          acredita que Dante é uma ameaça existencial para Aethelgard e que eliminá-lo é um ato de amor ao povo. O Reino
-          o treinou para ser perfeito: preciso, leal, implacável.</p>
-        <p>O que Elias não consegue admitir é que ele falhou com Dante antes mesmo do Grimório Negro despertar. Sua
-          lealdade ao Reino é, em parte, uma fuga da culpa de nunca ter defendido o irmão quando importava.</p>
-      </div>
-
-      <div class="lore-quote gold-quote">
-        "Eu não o caço por obrigação. Eu o caço porque alguém tem que pagar pelo que ele se tornou — e esse alguém sou
-        eu."
-        <span class="lore-quote-attr">— Elias, ao Conselho do Reino</span>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════
-       III — GRIMÓRIO & 5ª FOLHA
-  ══════════════════════════════════════ -->
-    <section class="section" id="sec-grimorio">
-      <div class="section-header">
-        <span class="section-eyebrow">Capítulo III</span>
-        <h1 class="section-title">O GRIMÓRIO &<br>A 5ª FOLHA</h1>
-        <div class="section-divider"></div>
-      </div>
-
-      <div class="lore-quote">
-        O Dia da Ascensão não foi uma conquista. Foi uma rendição — e Dante ainda não sabe disso.
-        <span class="lore-quote-attr">— Fragmento do Diário de Astaroth</span>
-      </div>
-
-      <h2 class="section-sub">O DIA DA ASCENSÃO</h2>
-
-      <p class="prose">
-        O Dia da Ascensão marca o momento em que o <strong>Grimório Negro</strong> — até então inerte por três séculos
-        em um cofre do Reino — acordou ao contato de Dante. Nenhum ritual foi feito. Nenhuma invocação. O grimório
-        simplesmente... reconheceu algo nele.
-      </p>
-
-      <div class="pixel-box corner"><span>
-          <div class="pixel-box-title">CRONOLOGIA DO EVENTO</div>
-          <p><strong>23:00</strong> — Dante encontra o Grimório Negro pela primeira vez no subsolo da casa da família.
-          </p>
-          <p><strong>23:47</strong> — A névoa negra se expande em um raio de 300 metros. Dezessete pessoas desaparecem,
-            "absorvidas" pelo Vácuo.</p>
-          <p><strong>00:12</strong> — O Grimório abre espontaneamente na Quinta Folha — página em branco que começa a se
-            escrever com o sangue de Dante.</p>
-          <p><strong>Amanhecer</strong> — Dante desperta no centro de uma cratera de areia negra. O grimório está preso
-            ao seu antebraço como uma tatuagem viva.</p>
-        </span></div>
-
-      <h2 class="section-sub">O PACTO COM ASTAROTH</h2>
-
-      <p class="prose">
-        Astaroth não é um demônio no sentido clássico. É uma <strong>entidade do Vácuo</strong> — uma consciência que
-        existe no espaço entre os planos mágicos, alimentando-se da magia que flui pelo mundo. Ele não corrompeu Dante
-        ativamente; ele fez uma oferta que Dante aceitou sem perceber os termos.
-      </p>
-
-      <div class="callout">
-        <span class="callout-icon">☠</span>
-        <span class="callout-text">Os termos do pacto nunca foram ditos em voz alta. Segundo a lore, os Contratos do
-          Vácuo são escritos no silêncio entre as palavras — o que não foi recusado foi aceito.</span>
-      </div>
-
-      <div class="info-grid">
-        <div class="info-cell">
-          <div class="info-cell-label">O QUE ASTAROTH DEU</div>
-          <div class="info-cell-value">A capacidade de sobreviver ao Grimório Negro. Acesso à Quinta Folha. Poder de
-            absorção ilimitado.</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">O QUE ASTAROTH TOMOU</div>
-          <div class="info-cell-value">Uma janela. Um acesso progressivo ao mundo físico através de Dante — cada uso do
-            Vácuo abre a fissura um pouco mais.</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">A 5ª FOLHA</div>
-          <div class="info-cell-value">Única no mundo. Não contém um trevo — contém um Buraco. Um vazio que cresce à
-            medida que Dante usa sua magia.</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">PONTO DE NÃO-RETORNO</div>
-          <div class="info-cell-value">Quando a 5ª Folha estiver completamente preenchida pelo Vácuo, Astaroth se
-            manifestará plenamente no plano físico.</div>
+      <!-- ELIAS -->
+      <div class="char-card card-elias">
+        <div class="card-banner"></div>
+        <div class="card-body">
+          <div class="card-avatar">☀</div>
+          <div class="card-name">ELIAS</div>
+          <div class="card-epithet">"A Lâmina Dourada do Reino"</div>
+          <div class="card-stats">
+            <div class="stat-row">
+              <span class="stat-label">PODER</span>
+              <div class="stat-bar"><div class="stat-fill" style="width:78%"></div></div>
+              <span class="stat-val">78</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">CONTROLE</span>
+              <div class="stat-bar"><div class="stat-fill" style="width:95%"></div></div>
+              <span class="stat-val">95</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">INÉRCIA</span>
+              <div class="stat-bar"><div class="stat-fill" style="width:42%"></div></div>
+              <span class="stat-val">42</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">LEALDADE</span>
+              <div class="stat-bar"><div class="stat-fill" style="width:88%"></div></div>
+              <span class="stat-val">88</span>
+            </div>
+          </div>
+          <div class="card-tag-row">
+            <span class="tag">CAVALEIRO DO REINO</span>
+            <span class="tag">4º TREVO</span>
+            <span class="tag">EXECUTIVO</span>
+            <span class="tag">HERDEIRO</span>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- ══════════════════════════════════════
+    <h2 class="section-sub" id="pers-dante">PERFIS DETALHADOS</h2>
+
+    <!-- INFOBOX DANTE (float right) -->
+    <div class="infobox infobox-dante">
+      <div class="infobox-title">DANTE<br>"O VAZIO"</div>
+      <div class="infobox-avatar">✦</div>
+      <table>
+        <tr><td>TÍTULO</td><td>Portador do Vácuo</td></tr>
+        <tr><td>IDADE</td><td>17 anos</td></tr>
+        <tr><td>GRIMÓRIO</td><td>Grimório Negro</td></tr>
+        <tr><td>FOLHA</td><td>5ª — Vácuo</td></tr>
+        <tr><td>FACÇÃO</td><td>Vácuo / Nenhuma</td></tr>
+        <tr><td>STATUS</td><td>Foragido</td></tr>
+        <tr><td>AFILIAÇÃO</td><td>Astaroth (involuntário)</td></tr>
+        <tr><td>FRAQUEZA</td><td>Âncoras de humanidade</td></tr>
+      </table>
+    </div>
+
+    <div class="pixel-box">
+      <div class="pixel-box-title">▸ DANTE — O VAZIO</div>
+      <p>Protagonista da campanha. Dante não escolheu o poder que carrega — ele sobreviveu a ele. O <a class="wikilink" onclick="navigate('grimorio', document.querySelector('[data-section=grimorio]'))">Grimório Negro</a> o fundiu com o conceito de <strong>Vácuo</strong>: a ausência absoluta que devora tudo. Sua magia não cria — ela consome, absorve, anula. Cada feitiço que lança custa um fragmento de sua humanidade.</p>
+      <p>Psicologicamente, Dante oscila entre o ressentimento pelo abandono da família e um frio distanciamento que cresce com cada uso do Grimório. Os jogadores controlarão suas ações e decidirão se ele sucumbe ao Vácuo ou encontra um caminho de volta — o que determina qual <a class="wikilink" onclick="navigate('finais', document.querySelector('[data-section=finais]'))">Final da Campanha</a> é ativado.</p>
+    </div>
+
+    <div style="clear:both"></div>
+
+    <!-- INFOBOX ELIAS (float right) -->
+    <div class="infobox infobox-elias" id="pers-elias">
+      <div class="infobox-title">ELIAS<br>"A LÂMINA DOURADA"</div>
+      <div class="infobox-avatar">☀</div>
+      <table>
+        <tr><td>TÍTULO</td><td>Cavaleiro do Reino</td></tr>
+        <tr><td>IDADE</td><td>21 anos</td></tr>
+        <tr><td>GRIMÓRIO</td><td>Grimório Dourado</td></tr>
+        <tr><td>FOLHA</td><td>4ª — Luz</td></tr>
+        <tr><td>FACÇÃO</td><td>Reino de Aethelgard</td></tr>
+        <tr><td>STATUS</td><td>Cavaleiro Ativo</td></tr>
+        <tr><td>MISSÃO</td><td>Eliminar Dante</td></tr>
+        <tr><td>FRAQUEZA</td><td>Culpa reprimida</td></tr>
+      </table>
+    </div>
+
+    <div class="pixel-box gold-box">
+      <div class="pixel-box-title gold">▸ ELIAS — A LÂMINA DOURADA</div>
+      <p>Antagonista principal. Elias não é um vilão por crueldade — é um vilão por convicção. Ele genuinamente acredita que <a class="wikilink" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))">Dante</a> é uma ameaça existencial para <a class="wikilink-gold" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Aethelgard</a> e que eliminá-lo é um ato de amor ao povo. O <a class="wikilink-gold" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Reino</a> o treinou para ser perfeito: preciso, leal, implacável.</p>
+      <p>O que Elias não consegue admitir é que ele falhou com Dante antes mesmo do <a class="wikilink" onclick="navigate('grimorio', document.querySelector('[data-section=grimorio]'))">Grimório Negro</a> despertar. Sua lealdade ao Reino é, em parte, uma fuga da culpa de nunca ter defendido o irmão quando importava.</p>
+    </div>
+
+    <div style="clear:both"></div>
+
+    <div class="lore-quote gold-quote" id="pers-quote">
+      "Eu não o caço por obrigação. Eu o caço porque alguém tem que pagar pelo que ele se tornou — e esse alguém sou eu."
+      <span class="lore-quote-attr">— Elias, ao Conselho do Reino</span>
+    </div>
+  </section>
+
+  <section class="section" id="sec-grimorio">
+    <div class="section-header">
+      <span class="section-eyebrow">Capítulo III</span>
+      <h1 class="section-title">O GRIMÓRIO &<br>A 5ª FOLHA</h1>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="lore-quote">
+      O Dia da Ascensão não foi uma conquista. Foi uma rendição — e Dante ainda não sabe disso.
+      <span class="lore-quote-attr">— Fragmento do Diário de Astaroth</span>
+    </div>
+
+    <!-- TOC -->
+    <nav class="toc" aria-label="Índice do Grimório">
+      <div class="toc-inner">
+        <div class="toc-title"><span class="toc-title-icon">▤</span> ÍNDICE</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a class="toc-link" href="#grim-ascensao"><span class="toc-num">1.</span> O Dia da Ascensão</a></li>
+          <li class="toc-item"><a class="toc-link" href="#grim-astaroth"><span class="toc-num">2.</span> O Pacto com Astaroth</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <h2 class="section-sub" id="grim-ascensao">O DIA DA ASCENSÃO</h2>
+
+    <p class="prose">
+      O Dia da Ascensão marca o momento em que o <strong>Grimório Negro</strong> — até então inerte por três séculos em um cofre do <a class="wikilink-gold" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Reino</a> — acordou ao contato de <a class="wikilink" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))">Dante</a>. Nenhum ritual foi feito. Nenhuma invocação. O grimório simplesmente... reconheceu algo nele.
+    </p>
+
+    <div class="pixel-box corner"><span>
+      <div class="pixel-box-title">CRONOLOGIA DO EVENTO</div>
+      <p><strong>23:00</strong> — Dante encontra o Grimório Negro pela primeira vez no subsolo da casa da família.</p>
+      <p><strong>23:47</strong> — A névoa negra se expande em um raio de 300 metros. Dezessete pessoas desaparecem, "absorvidas" pelo <a class="wikilink" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Vácuo</a>.</p>
+      <p><strong>00:12</strong> — O Grimório abre espontaneamente na Quinta Folha — página em branco que começa a se escrever com o sangue de Dante.</p>
+      <p><strong>Amanhecer</strong> — Dante desperta no centro de uma cratera de areia negra. O grimório está preso ao seu antebraço como uma tatuagem viva.</p>
+    </span></div>
+
+    <h2 class="section-sub" id="grim-astaroth">O PACTO COM ASTAROTH</h2>
+
+    <p class="prose">
+      Astaroth não é um demônio no sentido clássico. É uma <strong>entidade do <a class="wikilink" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Vácuo</a></strong> — uma consciência que existe no espaço entre os planos mágicos, alimentando-se da magia que flui pelo mundo. Ele não corrompeu Dante ativamente; ele fez uma oferta que Dante aceitou sem perceber os termos.
+    </p>
+
+    <div class="callout">
+      <span class="callout-icon">☠</span>
+      <span class="callout-text">Os termos do pacto nunca foram ditos em voz alta. Segundo a lore, os Contratos do Vácuo são escritos no silêncio entre as palavras — o que não foi recusado foi aceito.</span>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-cell-label">O QUE ASTAROTH DEU</div>
+        <div class="info-cell-value">A capacidade de sobreviver ao Grimório Negro. Acesso à Quinta Folha. Poder de <a class="wikilink" onclick="navigate('mecanicas', document.querySelector('[data-section=mecanicas]'))">absorção</a> ilimitado.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-cell-label">O QUE ASTAROTH TOMOU</div>
+        <div class="info-cell-value">Uma janela. Um acesso progressivo ao mundo físico através de Dante — cada uso do Vácuo abre a fissura um pouco mais.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-cell-label">A 5ª FOLHA</div>
+        <div class="info-cell-value">Única no mundo. Não contém um trevo — contém um Buraco. Um vazio que cresce à medida que Dante usa sua magia e acumula <a class="wikilink" onclick="navigate('mecanicas', document.querySelector('[data-section=mecanicas]'))">Pontos de Inércia</a>.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-cell-label">PONTO DE NÃO-RETORNO</div>
+        <div class="info-cell-value">Quando a 5ª Folha estiver completamente preenchida pelo Vácuo, Astaroth se manifestará plenamente no plano físico.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
        IV — O MUNDO
   ══════════════════════════════════════ -->
-    <section class="section" id="sec-mundo">
-      <div class="section-header">
-        <span class="section-eyebrow">Capítulo IV</span>
-        <h1 class="section-title gold">O MUNDO</h1>
-        <div class="section-divider gold-line"></div>
+  <section class="section" id="sec-mundo">
+    <div class="section-header">
+      <span class="section-eyebrow">Capítulo IV</span>
+      <h1 class="section-title gold">O MUNDO</h1>
+      <div class="section-divider gold-line"></div>
+    </div>
+
+    <h2 class="section-sub gold">FAÇÕES PRINCIPAIS</h2>
+
+    <div class="faction-row void-faction">
+      <div class="faction-accent"></div>
+      <div class="faction-content">
+        <div class="faction-name">A FACÇÃO DO VÁCUO</div>
+        <div class="faction-desc">Não é um exército organizado — é uma inevitabilidade. São pessoas, criaturas e entidades que foram tocadas pelo Vácuo e passaram a gravitá-lo. Alguns seguem Dante conscientemente. Outros simplesmente param de resistir ao Grimório. A Facção do Vácuo não tem bandeira, hierarquia ou quartel-general. Tem apenas um centro de gravidade: onde Dante está.</div>
       </div>
+    </div>
 
-      <h2 class="section-sub gold">FAÇÕES PRINCIPAIS</h2>
-
-      <div class="faction-row void-faction">
-        <div class="faction-accent"></div>
-        <div class="faction-content">
-          <div class="faction-name">A FACÇÃO DO VÁCUO</div>
-          <div class="faction-desc">Não é um exército organizado — é uma inevitabilidade. São pessoas, criaturas e
-            entidades que foram tocadas pelo Vácuo e passaram a gravitá-lo. Alguns seguem Dante conscientemente. Outros
-            simplesmente param de resistir ao Grimório. A Facção do Vácuo não tem bandeira, hierarquia ou
-            quartel-general. Tem apenas um centro de gravidade: onde Dante está.</div>
-        </div>
+    <div class="faction-row kingdom-faction">
+      <div class="faction-accent"></div>
+      <div class="faction-content">
+        <div class="faction-name">O REINO DE AETHELGARD</div>
+        <div class="faction-desc">Uma monarquia mágica há seis gerações, sustentada pelo controle dos grimórios e pela doutrina do Quatro Trevos. O Rei sabe que o Quinto Trevo existe — e sabe o que seu surgimento significa para a legitimidade do trono. A "caçada" a Dante não é apenas questão de segurança pública. É uma questão de sobrevivência política do sistema.</div>
       </div>
+    </div>
 
-      <div class="faction-row kingdom-faction">
-        <div class="faction-accent"></div>
-        <div class="faction-content">
-          <div class="faction-name">O REINO DE AETHELGARD</div>
-          <div class="faction-desc">Uma monarquia mágica há seis gerações, sustentada pelo controle dos grimórios e pela
-            doutrina do Quatro Trevos. O Rei sabe que o Quinto Trevo existe — e sabe o que seu surgimento significa para
-            a legitimidade do trono. A "caçada" a Dante não é apenas questão de segurança pública. É uma questão de
-            sobrevivência política do sistema.</div>
-        </div>
+    <h2 class="section-sub gold">O PILAR DO MUNDO</h2>
+
+    <div class="pixel-box gold-box">
+      <div class="pixel-box-title gold">CONCEITO COSMOLÓGICO</div>
+      <p>O Pilar do Mundo não é uma estrutura física — é o princípio metafísico que mantém os planos mágicos separados. A magia flui através dele como água por um aqueduto, alimentando os grimórios, os seres mágicos e o próprio tecido de Aethelgard.</p>
+      <p>Cada Trevo de grimório atua como uma âncora para um pilar. Quatro Trevos = quatro pilares = equilíbrio estável há seis séculos. Um Quinto Trevo, no entanto, não adicionaria um quinto pilar — <strong>ele substituiria todos os quatro</strong>. O Vácuo não convive com a magia existente. Ele a apaga.</p>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-cell gold-cell">
+        <div class="info-cell-label gold">DESERTO DE VETH'KAAR</div>
+        <div class="info-cell-value">Região proibida. A areia é negra e quente mesmo à noite. O Vácuo é fisicamente palpável aqui — magia comum se apaga em segundos. Ponto de origem do Grimório Negro.</div>
       </div>
-
-      <h2 class="section-sub gold">O PILAR DO MUNDO</h2>
-
-      <div class="pixel-box gold-box">
-        <div class="pixel-box-title gold">CONCEITO COSMOLÓGICO</div>
-        <p>O Pilar do Mundo não é uma estrutura física — é o princípio metafísico que mantém os planos mágicos
-          separados. A magia flui através dele como água por um aqueduto, alimentando os grimórios, os seres mágicos e o
-          próprio tecido de Aethelgard.</p>
-        <p>Cada Trevo de grimório atua como uma âncora para um pilar. Quatro Trevos = quatro pilares = equilíbrio
-          estável há seis séculos. Um Quinto Trevo, no entanto, não adicionaria um quinto pilar — <strong>ele
-            substituiria todos os quatro</strong>. O Vácuo não convive com a magia existente. Ele a apaga.</p>
+      <div class="info-cell gold-cell">
+        <div class="info-cell-label gold">A CAPITAL — AURIS</div>
+        <div class="info-cell-value">Cidade-fortaleza do Reino. Sede do Conselho de Grimórios e da Guarda Dourada de Elias. Torres de cristal mágico que amplificam os sinais dos Quatro Trevos.</div>
       </div>
-
-      <div class="info-grid">
-        <div class="info-cell gold-cell">
-          <div class="info-cell-label gold">DESERTO DE VETH'KAAR</div>
-          <div class="info-cell-value">Região proibida. A areia é negra e quente mesmo à noite. O Vácuo é fisicamente
-            palpável aqui — magia comum se apaga em segundos. Ponto de origem do Grimório Negro.</div>
-        </div>
-        <div class="info-cell gold-cell">
-          <div class="info-cell-label gold">A CAPITAL — AURIS</div>
-          <div class="info-cell-value">Cidade-fortaleza do Reino. Sede do Conselho de Grimórios e da Guarda Dourada de
-            Elias. Torres de cristal mágico que amplificam os sinais dos Quatro Trevos.</div>
-        </div>
-        <div class="info-cell gold-cell">
-          <div class="info-cell-label gold">AS FRONTEIRAS MORTAS</div>
-          <div class="info-cell-value">Zonas onde o Vácuo já passou e consumiu a magia local. Áreas sem vida mágica, sem
-            fauna sobrenatural — apenas silêncio e areia preta.</div>
-        </div>
-        <div class="info-cell gold-cell">
-          <div class="info-cell-label gold">O ARQUIVO DE KETH</div>
-          <div class="info-cell-value">Biblioteca subterrânea contendo os registros do Grimório Negro. Destruída
-            parcialmente durante o Dia da Ascensão. Localização agora classificada pelo Reino.</div>
-        </div>
+      <div class="info-cell gold-cell">
+        <div class="info-cell-label gold">AS FRONTEIRAS MORTAS</div>
+        <div class="info-cell-value">Zonas onde o Vácuo já passou e consumiu a magia local. Áreas sem vida mágica, sem fauna sobrenatural — apenas silêncio e areia preta.</div>
       </div>
-    </section>
-
-    <!-- ══════════════════════════════════════
-       V — MECÂNICAS
-  ══════════════════════════════════════ -->
-    <section class="section" id="sec-mecanicas">
-      <div class="section-header">
-        <span class="section-eyebrow">Capítulo V</span>
-        <h1 class="section-title">MECÂNICAS<br>DE SISTEMA</h1>
-        <div class="section-divider"></div>
+      <div class="info-cell gold-cell">
+        <div class="info-cell-label gold">O ARQUIVO DE KETH</div>
+        <div class="info-cell-value">Biblioteca subterrânea contendo os registros do Grimório Negro. Destruída parcialmente durante o Dia da Ascensão. Localização agora classificada pelo Reino.</div>
       </div>
+    </div>
+  </section>
 
-      <div class="lore-quote">
-        "A Inércia não é um recurso. É um relógio — e cada tick te aproxima de algo que não tem nome."
-        <span class="lore-quote-attr">— Manual do Mestre, Grimorion System v2</span>
+  <section class="section" id="sec-mecanicas">
+    <div class="section-header">
+      <span class="section-eyebrow">Capítulo V</span>
+      <h1 class="section-title">MECÂNICAS<br>DE SISTEMA</h1>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="lore-quote">
+      "A Inércia não é um recurso. É um relógio — e cada tick te aproxima de algo que não tem nome."
+      <span class="lore-quote-attr">— Manual do Mestre, Grimorion System v2</span>
+    </div>
+
+    <!-- TOC -->
+    <nav class="toc" aria-label="Índice de Mecânicas">
+      <div class="toc-inner">
+        <div class="toc-title"><span class="toc-title-icon">▤</span> ÍNDICE</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a class="toc-link" href="#mec-inercia"><span class="toc-num">1.</span> Pontos de Inércia</a></li>
+          <li class="toc-item"><a class="toc-link" href="#mec-inercia"><span class="toc-num">1.1</span> Ganho de Inércia</a></li>
+          <li class="toc-item"><a class="toc-link" href="#mec-inercia"><span class="toc-num">1.2</span> Thresholds</a></li>
+          <li class="toc-item"><a class="toc-link" href="#mec-absor"><span class="toc-num">2.</span> Absorção de Magia</a></li>
+          <li class="toc-item"><a class="toc-link" href="#mec-absor"><span class="toc-num">2.1</span> Absorção Passiva / Ativa</a></li>
+          <li class="toc-item"><a class="toc-link" href="#mec-absor"><span class="toc-num">2.2</span> Devoração de Grimório</a></li>
+        </ul>
       </div>
+    </nav>
 
-      <h2 class="section-sub">PONTOS DE INÉRCIA</h2>
+    <h2 class="section-sub" id="mec-inercia">PONTOS DE INÉRCIA</h2>
 
-      <p class="prose">
-        Os <strong>Pontos de Inércia</strong> (PI) são a mecânica central do sistema. Representam o "peso" acumulado que
-        o uso da magia do Vácuo exerce sobre a realidade e sobre Dante. Não são pontos de vida, não são mana — são uma
-        forma de progressão irreversível.
-      </p>
+    <p class="prose">
+      Os <strong>Pontos de Inércia</strong> (PI) são a mecânica central do sistema. Representam o "peso" acumulado que o uso da magia do <a class="wikilink" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Vácuo</a> exerce sobre a realidade e sobre <a class="wikilink" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))">Dante</a>. Não são pontos de vida, não são mana — são uma forma de progressão irreversível diretamente ligada aos <a class="wikilink" onclick="navigate('finais', document.querySelector('[data-section=finais]'))">Finais da Campanha</a>.
+    </p>
 
-      <div class="mechanic-block">
-        <div class="mechanic-number">01</div>
-        <div class="mechanic-title">GANHO DE INÉRCIA</div>
-        <div class="mechanic-desc">Cada vez que Dante usa uma habilidade do Grimório Negro, ele ganha PI conforme o
-          nível da habilidade (1 PI para habilidades menores, 3 PI para habilidades maiores, 5+ PI para o Vácuo
-          Absoluto). PI também pode ser ganho por falhas críticas em testes de Controle.</div>
+    <div class="mechanic-block">
+      <div class="mechanic-number">01</div>
+      <div class="mechanic-title">GANHO DE INÉRCIA</div>
+      <div class="mechanic-desc">Cada vez que Dante usa uma habilidade do Grimório Negro, ele ganha PI conforme o nível da habilidade (1 PI para habilidades menores, 3 PI para habilidades maiores, 5+ PI para o Vácuo Absoluto). PI também pode ser ganho por falhas críticas em testes de Controle.</div>
+    </div>
+
+    <div class="mechanic-block">
+      <div class="mechanic-number">02</div>
+      <div class="mechanic-title">THRESHOLDS DE INÉRCIA</div>
+      <div class="mechanic-desc">A cada 10 PI acumulados, Dante cruza um threshold. Os efeitos são permanentes e narrativos: 10 PI = perda da capacidade de sentir calor; 20 PI = olhos ficam negros durante o sono; 30 PI = a voz de Astaroth começa a se misturar com os pensamentos; 50 PI = ponto de não-retorno narrativo.</div>
+    </div>
+
+    <div class="mechanic-block">
+      <div class="mechanic-number">03</div>
+      <div class="mechanic-title">REDUÇÃO DE INÉRCIA</div>
+      <div class="mechanic-desc">PI pode ser reduzido apenas através de atos de conexão humana genuína — não atos heróicos, não vitórias em combate. Momentos de vulnerabilidade, perdão, ou reconexão com pessoas que Dante abandonou. O sistema intencionalmente dificulta a redução para manter a tensão narrativa.</div>
+    </div>
+
+    <h2 class="section-sub" id="mec-absor">ABSORÇÃO DE MAGIA</h2>
+
+    <p class="prose">
+      A mecânica de <strong>Absorção</strong> é a ferramenta mais poderosa e mais perigosa de <a class="wikilink" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))">Dante</a>. Permite que ele consuma a magia de fontes externas — feitiços inimigos, artefatos, e em casos extremos, o <a class="wikilink" onclick="navigate('grimorio', document.querySelector('[data-section=grimorio]'))">grimório</a> de outro portador.
+    </p>
+
+    <div class="mechanic-block">
+      <div class="mechanic-number">A</div>
+      <div class="mechanic-title">ABSORÇÃO PASSIVA</div>
+      <div class="mechanic-desc">Automática. Feitiços com nível igual ou inferior ao seu Controle atual são absorvidos sem teste. Dante recupera PI negativo igual a 1/4 do nível do feitiço absorvido. Não consome ação.</div>
+    </div>
+
+    <div class="mechanic-block">
+      <div class="mechanic-number">B</div>
+      <div class="mechanic-title">ABSORÇÃO ATIVA</div>
+      <div class="mechanic-desc">Requer ação completa. Dante pode tentar absorver qualquer fonte mágica visível em alcance de 6 metros. Teste de Controle vs. Potência da fonte. Sucesso: Dante absorve o efeito e ganha sua energia. Falha crítica: PI +3 e Dante é afetado pelo feitiço normalmente.</div>
+    </div>
+
+    <div class="mechanic-block">
+      <div class="mechanic-number">C</div>
+      <div class="mechanic-title">DEVORAÇÃO DE GRIMÓRIO</div>
+      <div class="mechanic-desc">A habilidade mais extrema. Dante pode absorver permanentemente uma folha de grimório inimigo. A vítima perde aquela habilidade para sempre. Dante ganha a habilidade mas ela fica "corrompida" pelo Vácuo — funciona, mas com efeitos colaterais sombrios. Cada Devoração concede PI +8 independente do resultado.</div>
+    </div>
+
+    <div class="callout">
+      <span class="callout-icon">⚡</span>
+      <span class="callout-text">Nota do Mestre: A Devoração de Grimório é deliberadamente tentadora. Os jogadores vão querer usá-la. O sistema os pune por isso — mas sempre de maneira narrativamente interessante, não punitiva sem razão.</span>
+    </div>
+  </section>
+
+  <section class="section" id="sec-finais">
+    <div class="section-header">
+      <span class="section-eyebrow">Capítulo VI</span>
+      <h1 class="section-title">FINAIS DA<br>CAMPANHA</h1>
+      <div class="section-divider"></div>
+    </div>
+
+    <p class="prose">
+      A campanha não tem um final "certo". O Mestre apresenta as consequências de cada escolha com a mesma seriedade narrativa — ambos os finais são completos, trágicos à sua maneira, e cinematográficos. A distinção é feita pelos <a class="wikilink" onclick="navigate('mecanicas', document.querySelector('[data-section=mecanicas]'))"><strong>Pontos de Inércia</strong></a> acumulados durante toda a campanha, não por um único momento decisivo.
+    </p>
+
+    <!-- TOC -->
+    <nav class="toc" aria-label="Índice dos Finais">
+      <div class="toc-inner">
+        <div class="toc-title"><span class="toc-title-icon">▤</span> ÍNDICE</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a class="toc-link" href="#fin-vilao"><span class="toc-num">1.</span> Final de Vilão — Vácuo Completo</a></li>
+          <li class="toc-item"><a class="toc-link gold-link" href="#fin-redem"><span class="toc-num">2.</span> Final de Redenção — O Custo do Retorno</a></li>
+          <li class="toc-item"><a class="toc-link" href="#fin-sistema"><span class="toc-num">3.</span> Como o Sistema Decide</a></li>
+        </ul>
       </div>
+    </nav>
 
-      <div class="mechanic-block">
-        <div class="mechanic-number">02</div>
-        <div class="mechanic-title">THRESHOLDS DE INÉRCIA</div>
-        <div class="mechanic-desc">A cada 10 PI acumulados, Dante cruza um threshold. Os efeitos são permanentes e
-          narrativos: 10 PI = perda da capacidade de sentir calor; 20 PI = olhos ficam negros durante o sono; 30 PI = a
-          voz de Astaroth começa a se misturar com os pensamentos; 50 PI = ponto de não-retorno narrativo.</div>
-      </div>
-
-      <div class="mechanic-block">
-        <div class="mechanic-number">03</div>
-        <div class="mechanic-title">REDUÇÃO DE INÉRCIA</div>
-        <div class="mechanic-desc">PI pode ser reduzido apenas através de atos de conexão humana genuína — não atos
-          heróicos, não vitórias em combate. Momentos de vulnerabilidade, perdão, ou reconexão com pessoas que Dante
-          abandonou. O sistema intencionalmente dificulta a redução para manter a tensão narrativa.</div>
-      </div>
-
-      <h2 class="section-sub">ABSORÇÃO DE MAGIA</h2>
-
-      <p class="prose">
-        A mecânica de <strong>Absorção</strong> é a ferramenta mais poderosa e mais perigosa de Dante. Permite que ele
-        consuma a magia de fontes externas — feitiços inimigos, artefatos, e em casos extremos, o grimório de outro
-        portador.
-      </p>
-
-      <div class="mechanic-block">
-        <div class="mechanic-number">A</div>
-        <div class="mechanic-title">ABSORÇÃO PASSIVA</div>
-        <div class="mechanic-desc">Automática. Feitiços com nível igual ou inferior ao seu Controle atual são absorvidos
-          sem teste. Dante recupera PI negativo igual a 1/4 do nível do feitiço absorvido. Não consome ação.</div>
-      </div>
-
-      <div class="mechanic-block">
-        <div class="mechanic-number">B</div>
-        <div class="mechanic-title">ABSORÇÃO ATIVA</div>
-        <div class="mechanic-desc">Requer ação completa. Dante pode tentar absorver qualquer fonte mágica visível em
-          alcance de 6 metros. Teste de Controle vs. Potência da fonte. Sucesso: Dante absorve o efeito e ganha sua
-          energia. Falha crítica: PI +3 e Dante é afetado pelo feitiço normalmente.</div>
-      </div>
-
-      <div class="mechanic-block">
-        <div class="mechanic-number">C</div>
-        <div class="mechanic-title">DEVORAÇÃO DE GRIMÓRIO</div>
-        <div class="mechanic-desc">A habilidade mais extrema. Dante pode absorver permanentemente uma folha de grimório
-          inimigo. A vítima perde aquela habilidade para sempre. Dante ganha a habilidade mas ela fica "corrompida" pelo
-          Vácuo — funciona, mas com efeitos colaterais sombrios. Cada Devoração concede PI +8 independente do resultado.
-        </div>
-      </div>
-
-      <div class="callout">
-        <span class="callout-icon">⚡</span>
-        <span class="callout-text">Nota do Mestre: A Devoração de Grimório é deliberadamente tentadora. Os jogadores vão
-          querer usá-la. O sistema os pune por isso — mas sempre de maneira narrativamente interessante, não punitiva
-          sem razão.</span>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════
-       VI — FINAIS
-  ══════════════════════════════════════ -->
-    <section class="section" id="sec-finais">
-      <div class="section-header">
-        <span class="section-eyebrow">Capítulo VI</span>
-        <h1 class="section-title">FINAIS DA<br>CAMPANHA</h1>
-        <div class="section-divider"></div>
-      </div>
-
-      <p class="prose">
-        A campanha não tem um final "certo". O Mestre apresenta as consequências de cada escolha com a mesma seriedade
-        narrativa — ambos os finais são completos, trágicos à sua maneira, e cinematográficos. A distinção é feita pelas
-        <strong>escolhas acumuladas</strong> durante toda a campanha, não por um único momento decisivo.
-      </p>
-
-      <div class="finale-grid">
-        <!-- VILLAIN -->
-        <div class="finale-card finale-villain">
-          <div class="finale-header">
-            <div class="finale-icon">☠</div>
-            <div class="finale-title-wrap">
-              <span class="finale-tag">FINAL I — VÁCUO COMPLETO</span>
-              <div class="finale-name">O FINAL<br>DE VILÃO</div>
-            </div>
-          </div>
-          <div class="finale-body">
-            <p>Dante para de lutar contra o Grimório Negro e abraça o Vácuo completamente. Astaroth se manifesta
-              parcialmente através dele — Dante continua existindo, mas compartilhado, um hospedeiro consciente de um
-              poder que transcende o mundo.</p>
-            <p>Elias é derrotado em combate final — não morto, mas com seu grimório absorvido. A última cena mostra
-              Dante de costas, caminhando para o deserto de Veth'kaar, enquanto as torres de Auris começam a apagar suas
-              luzes mágicas uma a uma.</p>
-            <p>Ativado quando: PI ≥ 45 ao início do Ato Final; Elias não foi poupado em nenhum confronto anterior; Dante
-              rejeitou todas as âncoras de humanidade oferecidas.</p>
+    <div class="finale-grid" id="fin-vilao">
+      <!-- VILLAIN -->
+      <div class="finale-card finale-villain">
+        <div class="finale-header">
+          <div class="finale-icon">☠</div>
+          <div class="finale-title-wrap">
+            <span class="finale-tag">FINAL I — VÁCUO COMPLETO</span>
+            <div class="finale-name">O FINAL<br>DE VILÃO</div>
           </div>
         </div>
-
-        <!-- REDEMPTION -->
-        <div class="finale-card finale-redemption">
-          <div class="finale-header">
-            <div class="finale-icon">✦</div>
-            <div class="finale-title-wrap">
-              <span class="finale-tag">FINAL II — O CUSTO DO RETORNO</span>
-              <div class="finale-name">O FINAL<br>DE REDENÇÃO</div>
-            </div>
-          </div>
-          <div class="finale-body">
-            <p>Dante encontra uma forma de selar o Vácuo — mas o preço é ele mesmo. Usando a 5ª Folha como âncora
-              inversa, ele prende Astaroth de volta ao espaço entre planos. O Grimório Negro se desfaz em areia negra.
-            </p>
-            <p>Elias chega tarde o suficiente para ver o irmão desaparecer. A última cena o mostra segurando um único
-              trevo vermelho — a impressão do Quinto Trevo que ficou na areia. Corte para negro.</p>
-            <p>Ativado quando: PI ≤ 30 ao início do Ato Final; Dante e Elias tiveram pelo menos uma cena de confronto
-              não-violento; ao menos uma âncora de humanidade foi preservada.</p>
-          </div>
+        <div class="finale-body">
+          <p><a class="wikilink" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))">Dante</a> para de lutar contra o Grimório Negro e abraça o Vácuo completamente. Astaroth se manifesta parcialmente através dele — Dante continua existindo, mas compartilhado, um hospedeiro consciente de um poder que transcende o mundo.</p>
+          <p><a class="wikilink-gold" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))">Elias</a> é derrotado em combate final — não morto, mas com seu grimório absorvido. A última cena mostra Dante de costas, caminhando para o <a class="wikilink" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">deserto de Veth'kaar</a>, enquanto as torres de Auris começam a apagar suas luzes mágicas uma a uma.</p>
+          <p>Ativado quando: <a class="wikilink" onclick="navigate('mecanicas', document.querySelector('[data-section=mecanicas]'))">PI</a> ≥ 45 ao início do Ato Final; Elias não foi poupado em nenhum confronto anterior; Dante rejeitou todas as âncoras de humanidade oferecidas.</p>
         </div>
       </div>
 
-      <div class="lore-quote" style="margin-top: 40px;">
-        Em ambos os finais, o Quinto Trevo existe. Em ambos os finais, o mundo mudou. A questão nunca foi se o Vácuo
-        chegaria — era o que Dante escolheria fazer quando chegasse.
-        <span class="lore-quote-attr">— Nota do Designer, Grimorion System</span>
+      <!-- REDEMPTION -->
+      <div class="finale-card finale-redemption" id="fin-redem">
+        <div class="finale-header">
+          <div class="finale-icon">✦</div>
+          <div class="finale-title-wrap">
+            <span class="finale-tag">FINAL II — O CUSTO DO RETORNO</span>
+            <div class="finale-name">O FINAL<br>DE REDENÇÃO</div>
+          </div>
+        </div>
+        <div class="finale-body">
+          <p>Dante encontra uma forma de selar o <a class="wikilink" onclick="navigate('mundo', document.querySelector('[data-section=mundo]'))">Vácuo</a> — mas o preço é ele mesmo. Usando a <a class="wikilink" onclick="navigate('grimorio', document.querySelector('[data-section=grimorio]'))">5ª Folha</a> como âncora inversa, ele prende Astaroth de volta ao espaço entre planos. O Grimório Negro se desfaz em areia negra.</p>
+          <p>Elias chega tarde o suficiente para ver o irmão desaparecer. A última cena o mostra segurando um único trevo vermelho — a impressão do Quinto Trevo que ficou na areia. Corte para negro.</p>
+          <p>Ativado quando: <a class="wikilink" onclick="navigate('mecanicas', document.querySelector('[data-section=mecanicas]'))">PI</a> ≤ 30 ao início do Ato Final; Dante e Elias tiveram pelo menos uma cena de confronto não-violento; ao menos uma âncora de humanidade foi preservada.</p>
+        </div>
       </div>
+    </div>
 
-      <h2 class="section-sub">COMO O SISTEMA DECIDE</h2>
+    <div class="lore-quote" style="margin-top: 40px;">
+      Em ambos os finais, o Quinto Trevo existe. Em ambos os finais, o mundo mudou. A questão nunca foi se o Vácuo chegaria — era o que Dante escolheria fazer quando chegasse.
+      <span class="lore-quote-attr">— Nota do Designer, Grimorion System</span>
+    </div>
 
-      <div class="pixel-box corner"><span>
-          <div class="pixel-box-title">GATILHOS DE NARRATIVA</div>
-          <p>O Mestre rastreia três contadores durante toda a campanha: <strong>Pontos de Inércia Totais</strong>,
-            <strong>Âncoras de Humanidade Preservadas</strong> (0–5), e <strong>Confrontos com Elias</strong> (quantos
-            terminaram sem violência).</p>
-          <p>No início do Ato Final, o Mestre consulta a tabela de finais e apresenta ao grupo o caminho que suas
-            escolhas construíram. Os jogadores então têm uma última oportunidade de agir dentro do final apresentado —
-            mas não de mudar qual final é ativado. As consequências são das escolhas, não das intenções.</p>
-        </span></div>
-    </section>
+    <h2 class="section-sub" id="fin-sistema">COMO O SISTEMA DECIDE</h2>
 
-  </main>
+    <div class="pixel-box corner"><span>
+      <div class="pixel-box-title">GATILHOS DE NARRATIVA</div>
+      <p>O Mestre rastreia três contadores durante toda a campanha: <a class="wikilink" onclick="navigate('mecanicas', document.querySelector('[data-section=mecanicas]'))"><strong>Pontos de Inércia Totais</strong></a>, <strong>Âncoras de Humanidade Preservadas</strong> (0–5), e <strong>Confrontos com <a class="wikilink-gold" onclick="navigate('personagens', document.querySelector('[data-section=personagens]'))">Elias</a></strong> (quantos terminaram sem violência).</p>
+      <p>No início do Ato Final, o Mestre consulta a tabela de finais e apresenta ao grupo o caminho que suas escolhas construíram. Os jogadores então têm uma última oportunidade de agir dentro do final apresentado — mas não de mudar qual final é ativado. As consequências são das escolhas, não das intenções.</p>
+    </span></div>
+  </section>
 
-  <script>
-    function navigate(id, el) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      document.getElementById('sec-' + id).classList.add('active');
-      if (el) el.classList.add('active');
-      document.getElementById('topbar-title').textContent = el ? el.textContent.trim() : '';
-      closeSidebar();
-      window.scrollTo(0, 0);
+</main>
+
+<script>
+  function navigate(id, el) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const sec = document.getElementById('sec-' + id);
+    if (sec) sec.classList.add('active');
+    if (el) {
+      el.classList.add('active');
+      document.getElementById('topbar-title').textContent = el.textContent.trim().replace(/[IVX⌂]+\s/, '');
     }
+    closeSidebar();
+    window.scrollTo(0, 0);
+  }
 
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      const open = sidebar.classList.toggle('open');
-      overlay.classList.toggle('show', open);
-    }
+  // Anchor links: scroll within section + highlight the target heading
+  document.addEventListener('click', function(e) {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
 
-    function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('overlay').classList.remove('show');
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // flash highlight — detect gold vs crimson by class
+    target.classList.remove('anchor-highlight');
+    void target.offsetWidth; // force reflow to restart animation
+    const isGold = target.classList.contains('gold') ||
+                   a.classList.contains('gold-link');
+    if (isGold) {
+      target.classList.add('anchor-highlight', 'gold-sub');
+    } else {
+      target.classList.add('anchor-highlight');
     }
-  </script>
+    setTimeout(() => {
+      target.classList.remove('anchor-highlight', 'gold-sub');
+    }, 1300);
+  });
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const open = sidebar.classList.toggle('open');
+    overlay.classList.toggle('show', open);
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+  }
+
+  // Wrap all tables inside sections with overflow-x: auto div
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.section table').forEach(function(table) {
+      if (table.closest('.table-scroll')) return; // already wrapped
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-scroll';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  });
+</script>
 </body>
-
 </html>
